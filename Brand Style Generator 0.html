@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Style Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&family=Lora:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #007AFF;
+            --secondary: #5856D6;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --dark: #1C1C1E;
+            --light: #F2F2F7;
+            --text: #1D1D1F;
+            --text-secondary: #86868B;
+            --surface: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .control-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .preview-panel {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .vibe-selector {
+            margin-bottom: 2rem;
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .vibe-option {
+            padding: 1rem 0.75rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--dark);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vibe-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .vibe-option:hover::before {
+            left: 100%;
+        }
+
+        .vibe-option:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .vibe-option.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .advanced-controls {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .control-group {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-group h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        .color-swatch.selected {
+            border-color: var(--dark);
+            transform: scale(1.1);
+        }
+
+        .font-preview {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .font-combo {
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .font-combo:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .font-combo.selected {
+            border-color: var(--primary);
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        .font-heading {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .font-body {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s;
+            transform: translate(-50%, -50%);
+        }
+
+        .generate-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .preview-content {
+            padding: 0;
+        }
+
+        .hero-preview {
+            min-height: 400px;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.1;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-cta {
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            border: 2px solid currentColor;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-cta:hover {
+            background: currentColor;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .style-details {
+            padding: 2rem;
+            background: var(--light);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-item h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .export-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .export-btn {
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .export-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .control-panel {
+                position: static;
+                order: 2;
+            }
+            
+            .preview-panel {
+                order: 1;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>Brand Style Generator</h1>
+            <p>Create professional brand identities with AI-powered design recommendations</p>
+        </header>
+
+        <main class="main-content">
+            <div class="control-panel">
+                <div class="section-title">🎨 Brand Configuration</div>
+                
+                <div class="vibe-selector">
+                    <h3>Brand Vibe</h3>
+                    <div class="vibe-grid">
+                        <div class="vibe-option active" data-vibe="minimal">Minimal</div>
+                        <div class="vibe-option" data-vibe="elegant">Elegant</div>
+                        <div class="vibe-option" data-vibe="techy">Techy</div>
+                        <div class="vibe-option" data-vibe="playful">Playful</div>
+                        <div class="vibe-option" data-vibe="bold">Bold</div>
+                        <div class="vibe-option" data-vibe="luxury">Luxury</div>
+                        <div class="vibe-option" data-vibe="organic">Organic</div>
+                        <div class="vibe-option" data-vibe="vintage">Vintage</div>
+                    </div>
+                </div>
+
+                <div class="advanced-controls">
+                    <div class="control-group">
+                        <h3>Brand Details</h3>
+                        <div class="input-group">
+                            <label>Company Name</label>
+                            <input type="text" id="companyName" placeholder="Enter your company name" value="InnovateTech">
+                        </div>
+                        <div class="input-group">
+                            <label>Industry</label>
+                            <select id="industry">
+                                <option value="technology">Technology</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="retail">Retail</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="creative">Creative</option>
+                                <option value="food">Food & Beverage</option>
+                                <option value="real-estate">Real Estate</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Tagline</label>
+                            <input type="text" id="tagline" placeholder="Your brand tagline" value="Innovation at the speed of thought">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <h3>Typography</h3>
+                        <div class="font-preview" id="fontPreview">
+                            <!-- Font combinations will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <h3>Color Palette</h3>
+                        <div class="color-palette" id="colorPalette">
+                            <!-- Color swatches will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateBrandStyle()">
+                    ✨ Generate New Style
+                </button>
+
+                <div class="export-section">
+                    <h3>Export Options</h3>
+                    <div class="export-options">
+                        <button class="export-btn" onclick="exportCSS()">CSS</button>
+                        <button class="export-btn" onclick="exportJSON()">JSON</button>
+                        <button class="export-btn" onclick="exportPNG()">PNG</button>
+                        <button class="export-btn" onclick="exportPalette()">Palette</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <div class="preview-content">
+                    <div class="hero-preview" id="heroPreview">
+                        <h1 class="hero-title" id="heroTitle">InnovateTech</h1>
+                        <p class="hero-subtitle" id="heroSubtitle">Innovation at the speed of thought</p>
+                        <button class="hero-cta">Get Started</button>
+                    </div>
+                    <div class="style-details">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <h4>Primary Font</h4>
+                                <p id="primaryFont">Inter</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Secondary Font</h4>
+                                <p id="secondaryFont">Poppins</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Primary Color</h4>
+                                <p id="primaryColor">#007AFF</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Accent Color</h4>
+                                <p id="accentColor">#5856D6</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Brand Vibe</h4>
+                                <p id="currentVibe">Minimal</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Mood Score</h4>
+                                <p id="moodScore">8.5/10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Brand style configurations
+        const brandStyles = {
+            minimal: {
+                colors: [
+                    ['#000000', '#FFFFFF', '#F5F5F5', '#E0E0E0', '#CCCCCC'],
+                    ['#2C3E50', '#ECF0F1', '#BDC3C7', '#95A5A6', '#7F8C8D'],
+                    ['#34495E', '#FFFFFF', '#F8F9FA', '#E9ECEF', '#DEE2E6']
+                ],
+                fonts: [
+                    { primary: 'Inter', secondary: 'Source Sans Pro' },
+                    { primary: 'Roboto', secondary: 'Inter' },
+                    { primary: 'Poppins', secondary: 'Inter' }
+                ]
+            },
+            elegant: {
+                colors: [
+                    ['#1A1A1A', '#F8F6F0', '#E8E2D4', '#D4C5A9', '#B8A082'],
+                    ['#2D1B69', '#F7F3FF', '#E6D9FF', '#D4C2FF', '#B799FF'],
+                    ['#8B4513', '#FFF8F0', '#F4E4BC', '#E6D690', '#D4C368']
+                ],
+                fonts: [
+                    { primary: 'Playfair Display', secondary: 'Inter' },
+                    { primary: 'Lora', secondary: 'Source Sans Pro' },
+                    { primary: 'Montserrat', secondary: 'Inter' }
+                ]
+            },
+            techy: {
+                colors: [
+                    ['#007AFF', '#001F3F', '#0074D9', '#7FDBFF', '#39CCCC'],
+                    ['#00D4AA', '#004D40', '#00695C', '#4DB6AC', '#B2DFDB'],
+                    ['#FF6B35', '#1A1A1A', '#FF8E53', '#FFB84D', '#FFC947']
+                ],
+                fonts: [
+                    { primary: 'Inter', secondary: 'Roboto' },
+                    { primary: 'Poppins', secondary: 'Source Sans Pro' },
+                    { primary: 'Montserrat', secondary: 'Inter' }
+                ]
+            },
+            playful: {
+                colors: [
+                    ['#FF6B9D', '#FF9F40', '#FFCD3C', '#4ECDC4', '#45B7D1'],
+                    ['#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'],
+                    ['#FF7675', '#74B9FF', '#A29BFE', '#FD79A8', '#FDCB6E']
+                ],
+                fonts: [
+                    { primary: 'Poppins', secondary: 'Inter' },
+                    { primary: 'Montserrat', secondary: 'Poppins' },
+                    { primary: 'Inter', secondary: 'Source Sans Pro' }
+                ]
+            },
+            bold: {
+                colors: [
+                    ['#FF0000', '#000000', '#FFFFFF', '#FF4444', '#FF8888'],
+                    ['#FF4500', '#2F4F4F', '#FFE4E1', '#FF6347', '#FFA07A'],
+                    ['#8B0000', '#F5F5DC', '#CD853F', '#D2691E', '#A0522D']
+                ],
+                fonts: [
+                    { primary: 'Montserrat', secondary: 'Inter' },
+                    { primary: 'Poppins', secondary: 'Roboto' },
+                    { primary: 'Inter', secondary: 'Source Sans Pro' }
+                ]
+            },
+            luxury: {
+                colors: [
+                    ['#D4AF37', '#000000', '#FFFAF0', '#F5DEB3', '#DEB887'],
+                    ['#800080', '#FFD700', '#FFF8DC', '#E6E6FA', '#DDA0DD'],
+                    ['#4B0082', '#F8F8FF', '#E6E6FA', '#D8BFD8', '#DA70D6']
+                ],
+                fonts: [
+                    { primary: 'Playfair Display', secondary: 'Inter' },
+                    { primary: 'Lora', secondary: 'Montserrat' },
+                    { primary: 'Montserrat', secondary: 'Source Sans Pro' }
+                ]
+            },
+            organic: {
+                colors: [
+                    ['#8FBC8F', '#F5F5DC', '#DEB887', '#D2B48C', '#BC8F8F'],
+                    ['#228B22', '#F0FFF0', '#90EE90', '#98FB98', '#ADFF2F'],
+                    ['#556B2F', '#F5F5DC', '#9ACD32', '#6B8E23', '#808000']
+                ],
+                fonts: [
+                    { primary: 'Lora', secondary: 'Inter' },
+                    { primary: 'Source Sans Pro', secondary: 'Poppins' },
+                    { primary: 'Inter', secondary: 'Roboto' }
+                ]
+            },
+            vintage: {
+                colors: [
+                    ['#8B4513', '#F5DEB3', '#DEB887', '#D2B48C', '#BC8F8F'],
+                    ['#A0522D', '#FFF8DC', '#F4A460', '#DAA520', '#B8860B'],
+                    ['#2F4F4F', '#F5F5DC', '#696969', '#A9A9A9', '#D3D3D3']
+                ],
+                fonts: [
+                    { primary: 'Playfair Display', secondary: 'Source Sans Pro' },
+                    { primary: 'Lora', secondary: 'Inter' },
+                    { primary: 'Montserrat', secondary: 'Poppins' }
+                ]
+            }
+        };
+
+        let currentStyle = {
+            vibe: 'minimal',
+            colorPalette: brandStyles.minimal.colors[0],
+            fonts: brandStyles.minimal.fonts[0],
+            companyName: 'InnovateTech',
+            tagline: 'Innovation at the speed of thought'
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingElements();
+            initializeVibeSelectors();
+            generateBrandStyle();
+        });
+
+        function createFloatingElements() {
+            const container = document.querySelector('.floating-elements');
+            for (let i = 0; i < 6; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.width = (Math.random() * 60 + 20) + 'px';
+                element.style.height = element.style.width;
+                element.style.animationDelay = Math.random() * 20 + 's';
+                element.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                container.appendChild(element);
+            }
+        }
+
+        function initializeVibeSelectors() {
+            document.querySelectorAll('.vibe-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.vibe-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentStyle.vibe = this.dataset.vibe;
+                    generateBrandStyle();
+                });
+            });
+
+            // Update company name and tagline
+            document.getElementById('companyName').addEventListener('input', function() {
+                currentStyle.companyName = this.value || 'Your Company';
+                updatePreview();
+            });
+
+            document.getElementById('tagline').addEventListener('input', function() {
+                currentStyle.tagline = this.value || 'Your brand tagline';
+                updatePreview();
+            });
+        }
+
+        function generateBrandStyle() {
+            const vibeStyles = brandStyles[currentStyle.vibe];
+            
+            // Randomly select color palette and fonts
+            currentStyle.colorPalette = vibeStyles.colors[Math.floor(Math.random() * vibeStyles.colors.length)];
+            currentStyle.fonts = vibeStyles.fonts[Math.floor(Math.random() * vibeStyles.fonts.length)];
+            
+            // Update UI
+            updateColorPalette();
+            updateFontPreview();
+            updatePreview();
+            showToast('✨ New brand style generated!');
+        }
+
+        function updateColorPalette() {
+            const paletteContainer = document.getElementById('colorPalette');
+            paletteContainer.innerHTML = '';
+            
+            currentStyle.colorPalette.forEach((color, index) => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = color;
+                swatch.title = color;
+                swatch.addEventListener('click', () => selectColor(index));
+                if (index === 0) swatch.classList.add('selected');
+                paletteContainer.appendChild(swatch);
+            });
+        }
+
+        function updateFontPreview() {
+            const fontContainer = document.getElementById('fontPreview');
+            fontContainer.innerHTML = '';
+            
+            const vibeStyles = brandStyles[currentStyle.vibe];
+            vibeStyles.fonts.forEach((fontCombo, index) => {
+                const fontDiv = document.createElement('div');
+                fontDiv.className = 'font-combo';
+                if (index === vibeStyles.fonts.indexOf(currentStyle.fonts)) {
+                    fontDiv.classList.add('selected');
+                }
+                
+                fontDiv.innerHTML = `
+                    <div class="font-heading" style="font-family: '${fontCombo.primary}', sans-serif;">
+                        ${fontCombo.primary}
+                    </div>
+                    <div class="font-body" style="font-family: '${fontCombo.secondary}', sans-serif;">
+                        ${fontCombo.secondary} - Body text
+                    </div>
+                `;
+                
+                fontDiv.addEventListener('click', () => {
+                    document.querySelectorAll('.font-combo').forEach(combo => combo.classList.remove('selected'));
+                    fontDiv.classList.add('selected');
+                    currentStyle.fonts = fontCombo;
+                    updatePreview();
+                });
+                
+                fontContainer.appendChild(fontDiv);
+            });
+        }
+
+        function selectColor(index) {
+            document.querySelectorAll('.color-swatch').forEach(swatch => swatch.classList.remove('selected'));
+            document.querySelectorAll('.color-swatch')[index].classList.add('selected');
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const heroPreview = document.getElementById('heroPreview');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            
+            // Update content
+            heroTitle.textContent = currentStyle.companyName;
+            heroSubtitle.textContent = currentStyle.tagline;
+            
+            // Update styles
+            heroPreview.style.background = `linear-gradient(135deg, ${currentStyle.colorPalette[0]} 0%, ${currentStyle.colorPalette[1]} 100%)`;
+            heroPreview.style.color = getContrastColor(currentStyle.colorPalette[0]);
+            
+            heroTitle.style.fontFamily = `'${currentStyle.fonts.primary}', sans-serif`;
+            heroSubtitle.style.fontFamily = `'${currentStyle.fonts.secondary}', sans-serif`;
+            
+            // Update style details
+            document.getElementById('primaryFont').textContent = currentStyle.fonts.primary;
+            document.getElementById('secondaryFont').textContent = currentStyle.fonts.secondary;
+            document.getElementById('primaryColor').textContent = currentStyle.colorPalette[0];
+            document.getElementById('accentColor').textContent = currentStyle.colorPalette[2];
+            document.getElementById('currentVibe').textContent = currentStyle.vibe.charAt(0).toUpperCase() + currentStyle.vibe.slice(1);
+            document.getElementById('moodScore').textContent = `${(Math.random() * 2 + 8).toFixed(1)}/10`;
+        }
+
+        function getContrastColor(hexColor) {
+            // Convert hex to RGB
+            const r = parseInt(hexColor.substr(1, 2), 16);
+            const g = parseInt(hexColor.substr(3, 2), 16);
+            const b = parseInt(hexColor.substr(5, 2), 16);
+            
+            // Calculate luminance
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            
+            return luminance > 0.5 ? '#000000' : '#FFFFFF';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Export functions
+        function exportCSS() {
+            const css = `:root {
+    /* Brand Colors */
+    --primary-color: ${currentStyle.colorPalette[0]};
+    --secondary-color: ${currentStyle.colorPalette[1]};
+    --accent-color: ${currentStyle.colorPalette[2]};
+    --neutral-light: ${currentStyle.colorPalette[3]};
+    --neutral-dark: ${currentStyle.colorPalette[4]};
+    
+    /* Typography */
+    --font-primary: '${currentStyle.fonts.primary}', sans-serif;
+    --font-secondary: '${currentStyle.fonts.secondary}', sans-serif;
+    
+    /* Brand Style: ${currentStyle.vibe} */
+}
+
+.brand-heading {
+    font-family: var(--font-primary);
+    color: var(--primary-color);
+}
+
+.brand-body {
+    font-family: var(--font-secondary);
+    color: var(--neutral-dark);
+}
+
+.brand-button {
+    background: var(--primary-color);
+    color: white;
+    font-family: var(--font-primary);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.brand-accent {
+    background: var(--accent-color);
+}`;
+            
+            downloadFile(`${currentStyle.companyName.toLowerCase()}-brand-style.css`, css, 'text/css');
+            showToast('🎨 CSS exported successfully!');
+        }
+
+        function exportJSON() {
+            const brandData = {
+                companyName: currentStyle.companyName,
+                tagline: currentStyle.tagline,
+                vibe: currentStyle.vibe,
+                colorPalette: {
+                    primary: currentStyle.colorPalette[0],
+                    secondary: currentStyle.colorPalette[1],
+                    accent: currentStyle.colorPalette[2],
+                    neutralLight: currentStyle.colorPalette[3],
+                    neutralDark: currentStyle.colorPalette[4]
+                },
+                typography: {
+                    primaryFont: currentStyle.fonts.primary,
+                    secondaryFont: currentStyle.fonts.secondary
+                },
+                generatedAt: new Date().toISOString()
+            };
+            
+            downloadFile(`${currentStyle.companyName.toLowerCase()}-brand-data.json`, 
+                JSON.stringify(brandData, null, 2), 'application/json');
+            showToast('📋 JSON exported successfully!');
+        }
+
+        function exportPNG() {
+            // Create a canvas to draw the brand preview
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 600;
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, currentStyle.colorPalette[0]);
+            gradient.addColorStop(1, currentStyle.colorPalette[1]);
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add company name
+            ctx.fillStyle = getContrastColor(currentStyle.colorPalette[0]);
+            ctx.font = 'bold 48px ' + currentStyle.fonts.primary;
+            ctx.textAlign = 'center';
+            ctx.fillText(currentStyle.companyName, canvas.width / 2, canvas.height / 2 - 30);
+            
+            // Add tagline
+            ctx.font = '24px ' + currentStyle.fonts.secondary;
+            ctx.fillText(currentStyle.tagline, canvas.width / 2, canvas.height / 2 + 30);
+            
+            // Add color swatches
+            const swatchSize = 60;
+            const startX = (canvas.width - (currentStyle.colorPalette.length * swatchSize + (currentStyle.colorPalette.length - 1) * 10)) / 2;
+            
+            currentStyle.colorPalette.forEach((color, index) => {
+                ctx.fillStyle = color;
+                ctx.fillRect(startX + index * (swatchSize + 10), canvas.height - 100, swatchSize, swatchSize);
+            });
+            
+            // Download the image
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${currentStyle.companyName.toLowerCase()}-brand-preview.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            showToast('🖼️ PNG exported successfully!');
+        }
+
+        function exportPalette() {
+            const paletteData = currentStyle.colorPalette.map((color, index) => {
+                const names = ['Primary', 'Secondary', 'Accent', 'Neutral Light', 'Neutral Dark'];
+                return `${names[index]}: ${color}`;
+            }).join('\n');
+            
+            const fullPalette = `${currentStyle.companyName} Brand Palette
+Vibe: ${currentStyle.vibe.charAt(0).toUpperCase() + currentStyle.vibe.slice(1)}
+
+${paletteData}
+
+Typography:
+Primary Font: ${currentStyle.fonts.primary}
+Secondary Font: ${currentStyle.fonts.secondary}
+
+Generated on: ${new Date().toLocaleDateString()}`;
+            
+            downloadFile(`${currentStyle.companyName.toLowerCase()}-color-palette.txt`, fullPalette, 'text/plain');
+            showToast('🎨 Palette exported successfully!');
+        }
+
+        function downloadFile(filename, content, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Add some interactive animations
+        document.addEventListener('mousemove', function(e) {
+            const cursor = { x: e.clientX, y: e.clientY };
+            const elements = document.querySelectorAll('.vibe-option, .color-swatch, .font-combo');
+            
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const center = {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2
+                };
+                
+                const distance = Math.sqrt(
+                    Math.pow(cursor.x - center.x, 2) + Math.pow(cursor.y - center.y, 2)
+                );
+                
+                if (distance < 100) {
+                    const scale = 1 + (100 - distance) / 1000;
+                    el.style.transform = `scale(${scale})`;
+                } else {
+                    el.style.transform = 'scale(1)';
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'g':
+                    case 'G':
+                        e.preventDefault();
+                        generateBrandStyle();
+                        break;
+                    case 's':
+                    case 'S':
+                        e.preventDefault();
+                        exportCSS();
+                        break;
+                }
+            }
+            
+            // Number keys for vibe selection
+            if (e.key >= '1' && e.key <= '8') {
+                const vibes = ['minimal', 'elegant', 'techy', 'playful', 'bold', 'luxury', 'organic', 'vintage'];
+                const vibeIndex = parseInt(e.key) - 1;
+                if (vibes[vibeIndex]) {
+                    document.querySelectorAll('.vibe-option').forEach(opt => opt.classList.remove('active'));
+                    document.querySelector(`[data-vibe="${vibes[vibeIndex]}"]`).classList.add('active');
+                    currentStyle.vibe = vibes[vibeIndex];
+                    generateBrandStyle();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
