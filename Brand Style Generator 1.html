@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Style Generator Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&family=JetBrains+Mono:wght@400;500;600&family=Lora:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0f0f23;
+            --secondary-bg: #1a1a2e;
+            --accent-bg: #16213e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-color: #00d4ff;
+            --success-color: #00ff88;
+            --border-color: #333;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.1; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 0.2; }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .controls-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            height: fit-content;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .control-label {
+            display: block;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .vibe-btn {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            background: var(--accent-bg);
+            color: var(--text-primary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vibe-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .vibe-btn:hover::before {
+            left: 100%;
+        }
+
+        .vibe-btn:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .vibe-btn.active {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .slider-container {
+            margin-bottom: 1rem;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--accent-bg);
+            outline: none;
+            -webkit-appearance: none;
+            position: relative;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+            transition: all 0.2s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
+        }
+
+        .preview-area {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: var(--accent-bg);
+            border-radius: 12px;
+            padding: 0.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .preview-content {
+            min-height: 500px;
+            display: none;
+        }
+
+        .preview-content.active {
+            display: block;
+        }
+
+        .hero-preview {
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 4rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .hero-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 2px solid;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .color-item {
+            text-align: center;
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 80px;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
+        }
+
+        .color-swatch:hover::before {
+            transform: translateX(100%);
+        }
+
+        .color-swatch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-value {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .typography-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .font-display {
+            background: var(--accent-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .font-label {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .font-sample {
+            margin-bottom: 1rem;
+        }
+
+        .font-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .export-section {
+            background: var(--accent-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .export-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .export-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .inspiration-section {
+            margin-top: 3rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .inspiration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .inspiration-card {
+            background: var(--accent-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .inspiration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .typography-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Brand Style Generator Pro</h1>
+            <p>Create stunning brand identities with AI-powered design intelligence. Generate cohesive color palettes, typography pairings, and preview your brand in action.</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label class="control-label">Brand Personality</label>
+                    <div class="vibe-grid">
+                        <button class="vibe-btn active" data-vibe="modern-tech">Modern Tech</button>
+                        <button class="vibe-btn" data-vibe="elegant-luxury">Elegant Luxury</button>
+                        <button class="vibe-btn" data-vibe="playful-creative">Playful Creative</button>
+                        <button class="vibe-btn" data-vibe="professional-corporate">Professional</button>
+                        <button class="vibe-btn" data-vibe="organic-natural">Organic Natural</button>
+                        <button class="vibe-btn" data-vibe="bold-energetic">Bold Energetic</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Customization</label>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Color Saturation</span>
+                            <span id="saturation-value">75%</span>
+                        </div>
+                        <input type="range" class="slider" id="saturation" min="20" max="100" value="75">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Contrast Level</span>
+                            <span id="contrast-value">60%</span>
+                        </div>
+                        <input type="range" class="slider" id="contrast" min="20" max="100" value="60">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Typography Weight</span>
+                            <span id="typography-value">Medium</span>
+                        </div>
+                        <input type="range" class="slider" id="typography" min="1" max="5" value="3">
+                    </div>
+                </div>
+
+                <button class="generate-btn" onclick="generateBrandStyle()">
+                    <span>Generate Brand Style</span>
+                </button>
+            </div>
+
+            <div class="preview-area">
+                <div class="preview-tabs">
+                    <button class="tab-btn active" onclick="switchTab('hero')">Hero Preview</button>
+                    <button class="tab-btn" onclick="switchTab('colors')">Color Palette</button>
+                    <button class="tab-btn" onclick="switchTab('typography')">Typography</button>
+                    <button class="tab-btn" onclick="switchTab('export')">Export</button>
+                </div>
+
+                <div id="hero-preview" class="preview-content active">
+                    <div class="hero-preview" id="hero-section">
+                        <div class="hero-content">
+                            <h2 class="hero-title" id="hero-title">Your Brand Starts Here</h2>
+                            <p class="hero-subtitle" id="hero-subtitle">Crafting exceptional experiences through innovative design and cutting-edge technology solutions.</p>
+                            <a href="#" class="hero-cta" id="hero-cta">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="colors-preview" class="preview-content">
+                    <div class="color-palette" id="color-palette">
+                        <!-- Color swatches will be populated here -->
+                    </div>
+                </div>
+
+                <div id="typography-preview" class="preview-content">
+                    <div class="typography-section">
+                        <div class="font-display">
+                            <div class="font-label">Primary Font (Headings)</div>
+                            <div class="font-sample">
+                                <h2 id="primary-font-sample" style="font-size: 2rem; margin-bottom: 0.5rem;">Design Excellence</h2>
+                                <h3 id="primary-font-sample-2" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Innovation Matters</h3>
+                                <h4 id="primary-font-sample-3" style="font-size: 1.2rem;">Brand Identity</h4>
+                            </div>
+                            <div class="font-name" id="primary-font-name">Inter</div>
+                        </div>
+                        <div class="font-display">
+                            <div class="font-label">Secondary Font (Body)</div>
+                            <div class="font-sample">
+                                <p id="secondary-font-sample" style="font-size: 1rem; margin-bottom: 0.5rem; line-height: 1.6;">This is how your body text will appear across your brand materials. It should be highly readable and complement your heading font perfectly.</p>
+                                <p id="secondary-font-sample-2" style="font-size: 0.9rem; opacity: 0.8;">Supporting text and captions will use this font as well.</p>
+                            </div>
+                            <div class="font-name" id="secondary-font-name">Inter</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="export-preview" class="preview-content">
+                    <div class="export-section">
+                        <h3 style="margin-bottom: 1rem; color: var(--accent-color);">Export Your Brand Kit</h3>
+                        <p style="margin-bottom: 1rem; color: var(--text-secondary);">Download your complete brand style guide and assets.</p>
+                        <div class="export-buttons">
+                            <button class="export-btn" onclick="exportCSS()">CSS Variables</button>
+                            <button class="export-btn" onclick="exportJSON()">JSON Data</button>
+                            <button class="export-btn" onclick="exportPDF()">Style Guide PDF</button>
+                            <button class="export-btn" onclick="exportFigma()">Figma Tokens</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inspiration-section">
+            <h3 style="margin-bottom: 0.5rem; color: var(--accent-color);">Brand Inspiration</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Explore trending brand styles and get inspired</p>
+            <div class="inspiration-grid">
+                <div class="inspiration-card" onclick="applyInspiration('minimal-mono')">
+                    <h4 style="margin-bottom: 0.5rem;">Minimal Monochrome</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Clean, sophisticated, timeless</p>
+                </div>
+                <div class="inspiration-card" onclick="applyInspiration('vibrant-gradient')">
+                    <h4 style="margin-bottom: 0.5rem;">Vibrant Gradients</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Bold, energetic, modern</p>
+                </div>
+                <div class="inspiration-card" onclick="applyInspiration('earth-tones')">
+                    <h4 style="margin-bottom: 0.5rem;">Earth Tones</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Natural, warm, sustainable</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Brand style configurations
+        const brandStyles = {
+            'modern-tech': {
+                colors: {
+                    primary: '#007bff',
+                    secondary: '#6c757d',
+                    accent: '#00d4ff',
+                    background: '#0f1419',
+                    surface: '#1a1f29',
+                    text: '#ffffff'
+                },
+                fonts: {
+                    primary: 'Space Grotesk',
+                    secondary: 'Inter'
+                },
+                hero: {
+                    title: 'Innovation Meets Design',
+                    subtitle: 'Cutting-edge solutions powered by advanced technology and human-centered design principles.',
+                    cta: 'Explore Tech'
+                }
+            },
+            'elegant-luxury': {
+                colors: {
+                    primary: '#d4af37',
+                    secondary: '#2c2c2c',
+                    accent: '#b8860b',
+                    background: '#1a1a1a',
+                    surface: '#2a2a2a',
+                    text: '#f5f5f5'
+                },
+                fonts: {
+                    primary: 'Playfair Display',
+                    secondary: 'Lora'
+                },
+                hero: {
+                    title: 'Timeless Elegance',
+                    subtitle: 'Where luxury meets sophistication. Experience the finest in premium design and craftsmanship.',
+                    cta: 'Discover Luxury'
+                }
+            },
+            'playful-creative': {
+                colors: {
+                    primary: '#ff6b6b',
+                    secondary: '#4ecdc4',
+                    accent: '#ffe66d',
+                    background: '#2c1810',
+                    surface: '#3a2318',
+                    text: '#ffffff'
+                },
+                fonts: {
+                    primary: 'Poppins',
+                    secondary: 'Inter'
+                },
+                hero: {
+                    title: 'Creative Freedom',
+                    subtitle: 'Unleash your imagination with bold designs and playful interactions that inspire and delight.',
+                    cta: 'Get Creative'
+                }
+            },
+            'professional-corporate': {
+                colors: {
+                    primary: '#2563eb',
+                    secondary: '#64748b',
+                    accent: '#0ea5e9',
+                    background: '#0f172a',
+                    surface: '#1e293b',
+                    text: '#f8fafc'
+                },
+                fonts: {
+                    primary: 'Inter',
+                    secondary: 'Inter'
+                },
+                hero: {
+                    title: 'Professional Excellence',
+                    subtitle: 'Trusted by industry leaders worldwide. Delivering results through proven expertise and reliability.',
+                    cta: 'Learn More'
+                }
+            },
+            'organic-natural': {
+                colors: {
+                    primary: '#059669',
+                    secondary: '#78716c',
+                    accent: '#34d399',
+                    background: '#1c1917',
+                    surface: '#292524',
+                    text: '#fafaf9'
+                },
+                fonts: {
+                    primary: 'Merriweather',
+                    secondary: 'Lora'
+                },
+                hero: {
+                    title: 'Natural Harmony',
+                    subtitle: 'Sustainable solutions inspired by nature. Creating balance between innovation and environmental responsibility.',
+                    cta: 'Go Green'
+                }
+            },
+            'bold-energetic': {
+                colors: {
+                    primary: '#dc2626',
+                    secondary: '#ea580c',
+                    accent: '#f59e0b',
+                    background: '#1a0a0a',
+                    surface: '#2d1515',
+                    text: '#ffffff'
+                },
+                fonts: {
+                    primary: 'Space Grotesk',
+                    secondary: 'Fira Sans'
+                },
+                hero: {
+                    title: 'Bold Moves',
+                    subtitle: 'High-energy solutions that make an impact. Dynamic design that captures attention and drives action.',
+                    cta: 'Take Action'
+                }
+            }
+        };
+
+        let currentStyle = brandStyles['modern-tech'];
+        let currentVibe = 'modern-tech';
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            generateBrandStyle();
+        });
+
+        function setupEventListeners() {
+            // Vibe selection
+            document.querySelectorAll('.vibe-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelector('.vibe-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                    currentVibe = this.dataset.vibe;
+                });
+            });
+
+            // Sliders
+            const saturationSlider = document.getElementById('saturation');
+            const contrastSlider = document.getElementById('contrast');
+            const typographySlider = document.getElementById('typography');
+
+            saturationSlider.addEventListener('input', function() {
+                document.getElementById('saturation-value').textContent = this.value + '%';
+            });
+
+            contrastSlider.addEventListener('input', function() {
+                document.getElementById('contrast-value').textContent = this.value + '%';
+            });
+
+            typographySlider.addEventListener('input', function() {
+                const weights = ['Light', 'Regular', 'Medium', 'Semi Bold', 'Bold'];
+                document.getElementById('typography-value').textContent = weights[this.value - 1];
+            });
+
+            // Color swatch click to copy
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('color-swatch')) {
+                    const color = e.target.style.backgroundColor;
+                    const rgb = color.match(/\d+/g);
+                    const hex = '#' + rgb.map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+                    
+                    navigator.clipboard.writeText(hex).then(() => {
+                        showNotification('Color copied to clipboard!');
+                    });
+                }
+            });
+        }
+
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.preview-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-preview').classList.add('active');
+        }
+
+        function generateBrandStyle() {
+            const generateBtn = document.querySelector('.generate-btn');
+            generateBtn.classList.add('loading');
+            
+            // Simulate AI processing time
+            setTimeout(() => {
+                currentStyle = { ...brandStyles[currentVibe] };
+                
+                // Apply customization sliders
+                applyCustomizations();
+                updatePreview();
+                
+                generateBtn.classList.remove('loading');
+                document.querySelector('.preview-area').classList.add('fade-in');
+            }, 800);
+        }
+
+        function applyCustomizations() {
+            const saturation = document.getElementById('saturation').value;
+            const contrast = document.getElementById('contrast').value;
+            const typography = document.getElementById('typography').value;
+
+            // Modify colors based on saturation
+            const saturationFactor = saturation / 100;
+            Object.keys(currentStyle.colors).forEach(key => {
+                if (key !== 'background' && key !== 'surface') {
+                    currentStyle.colors[key] = adjustColorSaturation(currentStyle.colors[key], saturationFactor);
+                }
+            });
+
+            // Modify contrast
+            const contrastFactor = contrast / 100;
+            if (contrastFactor < 0.5) {
+                currentStyle.colors.text = adjustColorBrightness(currentStyle.colors.text, -20);
+            } else if (contrastFactor > 0.7) {
+                currentStyle.colors.background = adjustColorBrightness(currentStyle.colors.background, -10);
+            }
+        }
+
+        function updatePreview() {
+            updateHeroSection();
+            updateColorPalette();
+            updateTypography();
+        }
+
+        function updateHeroSection() {
+            const heroSection = document.getElementById('hero-section');
+            const heroTitle = document.getElementById('hero-title');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            const heroCta = document.getElementById('hero-cta');
+
+            // Update content
+            heroTitle.textContent = currentStyle.hero.title;
+            heroSubtitle.textContent = currentStyle.hero.subtitle;
+            heroCta.textContent = currentStyle.hero.cta;
+
+            // Update styling
+            heroSection.style.background = `linear-gradient(135deg, ${currentStyle.colors.background} 0%, ${currentStyle.colors.surface} 100%)`;
+            heroTitle.style.fontFamily = currentStyle.fonts.primary;
+            heroTitle.style.background = `linear-gradient(135deg, ${currentStyle.colors.primary}, ${currentStyle.colors.accent})`;
+            heroTitle.style.webkitBackgroundClip = 'text';
+            heroTitle.style.webkitTextFillColor = 'transparent';
+            heroTitle.style.backgroundClip = 'text';
+
+            heroSubtitle.style.fontFamily = currentStyle.fonts.secondary;
+            heroSubtitle.style.color = currentStyle.colors.text;
+
+            heroCta.style.background = currentStyle.colors.primary;
+            heroCta.style.borderColor = currentStyle.colors.primary;
+            heroCta.style.color = 'white';
+            heroCta.style.fontFamily = currentStyle.fonts.secondary;
+        }
+
+        function updateColorPalette() {
+            const palette = document.getElementById('color-palette');
+            palette.innerHTML = '';
+
+            const colorEntries = [
+                { name: 'Primary', color: currentStyle.colors.primary, usage: 'Main brand color' },
+                { name: 'Secondary', color: currentStyle.colors.secondary, usage: 'Supporting elements' },
+                { name: 'Accent', color: currentStyle.colors.accent, usage: 'Highlights & CTAs' },
+                { name: 'Background', color: currentStyle.colors.background, usage: 'Page backgrounds' },
+                { name: 'Surface', color: currentStyle.colors.surface, usage: 'Card backgrounds' },
+                { name: 'Text', color: currentStyle.colors.text, usage: 'Primary text' }
+            ];
+
+            colorEntries.forEach(entry => {
+                const colorItem = document.createElement('div');
+                colorItem.className = 'color-item';
+                colorItem.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${entry.color}" title="Click to copy ${entry.color}"></div>
+                    <div class="color-label">${entry.name}</div>
+                    <div class="color-value">${entry.color}</div>
+                    <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">${entry.usage}</div>
+                `;
+                palette.appendChild(colorItem);
+            });
+        }
+
+        function updateTypography() {
+            // Update primary font samples
+            document.getElementById('primary-font-sample').style.fontFamily = currentStyle.fonts.primary;
+            document.getElementById('primary-font-sample-2').style.fontFamily = currentStyle.fonts.primary;
+            document.getElementById('primary-font-sample-3').style.fontFamily = currentStyle.fonts.primary;
+            document.getElementById('primary-font-name').textContent = currentStyle.fonts.primary;
+
+            // Update secondary font samples
+            document.getElementById('secondary-font-sample').style.fontFamily = currentStyle.fonts.secondary;
+            document.getElementById('secondary-font-sample-2').style.fontFamily = currentStyle.fonts.secondary;
+            document.getElementById('secondary-font-name').textContent = currentStyle.fonts.secondary;
+
+            // Apply colors
+            const textColor = currentStyle.colors.text;
+            document.querySelectorAll('#typography-preview .font-sample *').forEach(el => {
+                el.style.color = textColor;
+            });
+        }
+
+        function exportCSS() {
+            const css = `
+/* Generated Brand Style Variables */
+:root {
+    /* Colors */
+    --brand-primary: ${currentStyle.colors.primary};
+    --brand-secondary: ${currentStyle.colors.secondary};
+    --brand-accent: ${currentStyle.colors.accent};
+    --brand-background: ${currentStyle.colors.background};
+    --brand-surface: ${currentStyle.colors.surface};
+    --brand-text: ${currentStyle.colors.text};
+    
+    /* Typography */
+    --font-primary: '${currentStyle.fonts.primary}', sans-serif;
+    --font-secondary: '${currentStyle.fonts.secondary}', sans-serif;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+    --gradient-background: linear-gradient(135deg, var(--brand-background), var(--brand-surface));
+}
+
+/* Typography Classes */
+.heading-primary { font-family: var(--font-primary); }
+.body-text { font-family: var(--font-secondary); }
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+            `;
+
+            downloadFile(css, 'brand-style.css', 'text/css');
+            showNotification('CSS variables exported!');
+        }
+
+        function exportJSON() {
+            const jsonData = {
+                brandName: 'Generated Brand',
+                vibe: currentVibe,
+                colors: currentStyle.colors,
+                typography: {
+                    primaryFont: currentStyle.fonts.primary,
+                    secondaryFont: currentStyle.fonts.secondary
+                },
+                hero: currentStyle.hero,
+                generatedAt: new Date().toISOString()
+            };
+
+            downloadFile(JSON.stringify(jsonData, null, 2), 'brand-style.json', 'application/json');
+            showNotification('JSON data exported!');
+        }
+
+        function exportPDF() {
+            // Simulate PDF generation
+            showNotification('PDF generation feature coming soon!');
+        }
+
+        function exportFigma() {
+            const figmaTokens = {
+                colors: Object.entries(currentStyle.colors).map(([name, value]) => ({
+                    name: `brand/${name}`,
+                    value: value,
+                    type: 'color'
+                })),
+                typography: [
+                    {
+                        name: 'brand/heading',
+                        value: {
+                            fontFamily: currentStyle.fonts.primary,
+                            fontSize: '32px',
+                            fontWeight: '700',
+                            lineHeight: '1.2'
+                        },
+                        type: 'typography'
+                    },
+                    {
+                        name: 'brand/body',
+                        value: {
+                            fontFamily: currentStyle.fonts.secondary,
+                            fontSize: '16px',
+                            fontWeight: '400',
+                            lineHeight: '1.6'
+                        },
+                        type: 'typography'
+                    }
+                ]
+            };
+
+            downloadFile(JSON.stringify(figmaTokens, null, 2), 'figma-tokens.json', 'application/json');
+            showNotification('Figma tokens exported!');
+        }
+
+        function applyInspiration(inspiration) {
+            const inspirationStyles = {
+                'minimal-mono': {
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#666666',
+                        accent: '#333333',
+                        background: '#ffffff',
+                        surface: '#f8f9fa',
+                        text: '#000000'
+                    },
+                    fonts: {
+                        primary: 'Inter',
+                        secondary: 'Inter'
+                    },
+                    hero: {
+                        title: 'Less is More',
+                        subtitle: 'Embracing simplicity and clarity in every design decision.',
+                        cta: 'Explore'
+                    }
+                },
+                'vibrant-gradient': {
+                    colors: {
+                        primary: '#ff0080',
+                        secondary: '#7c3aed',
+                        accent: '#06d6a0',
+                        background: '#0a0014',
+                        surface: '#1a0828',
+                        text: '#ffffff'
+                    },
+                    fonts: {
+                        primary: 'Space Grotesk',
+                        secondary: 'Inter'
+                    },
+                    hero: {
+                        title: 'Vibrant Vision',
+                        subtitle: 'Bold gradients and dynamic colors that energize and inspire.',
+                        cta: 'Energize'
+                    }
+                },
+                'earth-tones': {
+                    colors: {
+                        primary: '#8b5a3c',
+                        secondary: '#a0522d',
+                        accent: '#228b22',
+                        background: '#2f1b14',
+                        surface: '#3e2723',
+                        text: '#f5f5dc'
+                    },
+                    fonts: {
+                        primary: 'Merriweather',
+                        secondary: 'Lora'
+                    },
+                    hero: {
+                        title: 'Natural Connection',
+                        subtitle: 'Warm, earthy tones that ground us in nature and authenticity.',
+                        cta: 'Connect'
+                    }
+                }
+            };
+
+            currentStyle = { ...inspirationStyles[inspiration] };
+            updatePreview();
+            showNotification('Inspiration applied!');
+        }
+
+        // Utility functions
+        function adjustColorSaturation(color, factor) {
+            // Convert hex to HSL, adjust saturation, convert back
+            const hex = color.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16) / 255;
+            const g = parseInt(hex.substr(2, 2), 16) / 255;
+            const b = parseInt(hex.substr(4, 2), 16) / 255;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+
+            s = Math.min(1, s * factor);
+
+            return hslToHex(h, s, l);
+        }
+
+        function adjustColorBrightness(color, percent) {
+            const hex = color.replace('#', '');
+            const num = parseInt(hex, 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        function hslToHex(h, s, l) {
+            const hue2rgb = (p, q, t) => {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+
+            let r, g, b;
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+
+            const toHex = (c) => {
+                const hex = Math.round(c * 255).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            };
+
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Add some advanced animations and interactions
+        document.addEventListener('mousemove', function(e) {
+            const header = document.querySelector('.header::before');
+            if (header) {
+                const rect = document.querySelector('.header').getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                
+                document.documentElement.style.setProperty('--mouse-x', x);
+                document.documentElement.style.setProperty('--mouse-y', y);
+            }
+        });
+
+        // Auto-generate on load
+        setTimeout(() => {
+            generateBrandStyle();
+        }, 500);
+    </script>
+</body>
+</html>
