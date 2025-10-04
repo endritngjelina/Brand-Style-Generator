@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandForge Pro - AI-Powered Brand Style Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=Roboto+Slab:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0b;
+            --secondary-bg: #1a1a1d;
+            --accent-bg: #252529;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a7;
+            --accent-color: #4f46e5;
+            --success-color: #10b981;
+            --border-color: #333338;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced container with breathing effect */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            background: 
+                conic-gradient(from 0deg at 50% 50%, transparent, rgba(79, 70, 229, 0.05), transparent),
+                radial-gradient(circle at 30% 40%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: -1;
+            animation: containerBreath 8s ease-in-out infinite;
+        }
+
+        @keyframes containerBreath {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.02) rotate(1deg); opacity: 0.3; }
+        }
+
+        .header {
+            padding: 32px 0;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(26, 26, 29, 0.8);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--accent-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            transform: translateY(-1px);
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 32px;
+            padding: 40px 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        /* Revolutionary vibe cards with magnetic hover */
+        .vibe-card {
+            padding: 18px;
+            background: var(--accent-bg);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px) saturate(180%);
+            transform-style: preserve-3d;
+        }
+
+        .vibe-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.1) 20%, 
+                rgba(79, 70, 229, 0.2) 50%, 
+                rgba(255,255,255,0.1) 80%, 
+                transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .vibe-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 2px;
+            background: conic-gradient(from 180deg, transparent, var(--accent-color), transparent);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask-composite: xor;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .vibe-card:hover::before {
+            left: 100%;
+        }
+
+        .vibe-card:hover::after {
+            opacity: 1;
+            animation: borderRotate 2s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .vibe-card:hover {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.15);
+            transform: translateY(-4px) scale(1.03) rotateX(5deg);
+            box-shadow: 
+                0 12px 35px rgba(79, 70, 229, 0.3),
+                0 0 0 1px rgba(255,255,255,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            filter: brightness(1.1);
+        }
+
+        .vibe-card.active {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.25);
+            box-shadow: 
+                0 0 40px rgba(79, 70, 229, 0.5),
+                0 0 0 1px var(--accent-color),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            transform: translateY(-2px) scale(1.02);
+            animation: activeCardPulse 3s ease-in-out infinite;
+        }
+
+        .vibe-card.active::after {
+            opacity: 1;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        @keyframes activeCardPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 40px rgba(79, 70, 229, 0.5),
+                    0 0 0 1px var(--accent-color),
+                    inset 0 1px 0 rgba(255,255,255,0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px rgba(79, 70, 229, 0.7),
+                    0 0 0 2px var(--accent-color),
+                    inset 0 1px 0 rgba(255,255,255,0.4);
+            }
+        }
+
+        .vibe-card.active .vibe-name {
+            color: var(--accent-color);
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+        }
+
+        .vibe-name {
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vibe-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vibe-card:hover .vibe-desc {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Next-gen input with floating label effect */
+        .input-group {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 18px 16px 10px;
+            background: var(--accent-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px) saturate(180%);
+            position: relative;
+            outline: none;
+        }
+
+        .custom-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 
+                0 0 0 4px rgba(79, 70, 229, 0.15),
+                0 8px 25px rgba(79, 70, 229, 0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            background: rgba(79, 70, 229, 0.05);
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .custom-input:focus + .input-label,
+        .custom-input:not(:placeholder-shown) + .input-label {
+            transform: translateY(-24px) scale(0.85);
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .input-label {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left top;
+            background: var(--secondary-bg);
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+
+        .custom-input::placeholder {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-input:focus::placeholder {
+            opacity: 0.7;
+        }
+
+        .slider-container {
+            margin-bottom: 16px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--accent-bg);
+            outline: none;
+            -webkit-appearance: none;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider:hover {
+            box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.1);
+        }
+
+        .slider::-webkit-slider-track {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(79, 70, 229, 0.4);
+            border: 3px solid white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            top: -8px;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.6);
+        }
+
+        .slider::-webkit-slider-thumb:active {
+            transform: scale(1.1);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 12px rgba(79, 70, 229, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.6);
+        }
+
+        .export-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .preview-area {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        /* Futuristic preview tabs with morphing backgrounds */
+        .preview-tabs {
+            display: flex;
+            background: var(--accent-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-tabs::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), #8b5cf6, #ec4899);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px 2px 0 0;
+            box-shadow: 0 -2px 8px rgba(79, 70, 229, 0.5);
+        }
+
+        .preview-tab {
+            padding: 18px 28px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            text-align: center;
+        }
+
+        .preview-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(79, 70, 229, 0.1) 0%, 
+                rgba(147, 51, 234, 0.1) 50%,
+                rgba(236, 72, 153, 0.1) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .preview-tab::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .preview-tab:hover::before {
+            transform: scaleX(1);
+        }
+
+        .preview-tab:hover::after {
+            opacity: 0.8;
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        .preview-tab:hover {
+            color: var(--accent-color);
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+        }
+
+        .preview-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.15);
+            font-weight: 600;
+            transform: translateY(-1px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .preview-tab.active::before {
+            transform: scaleX(1);
+        }
+
+        .preview-tab.active::after {
+            opacity: 1;
+            animation: activeTabPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes activeTabPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+        }
+
+        .preview-content {
+            padding: 32px;
+        }
+
+        .hero-preview {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .hero-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-preview:hover::before {
+            opacity: 1;
+        }
+
+        .hero-preview:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-content {
+            padding: 80px 60px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 32px;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .style-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .detail-card {
+            background: var(--accent-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .detail-card:hover::before {
+            opacity: 1;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.2);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideInUp 0.3s ease-out;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 0;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pulse animation for active elements */
+        .vibe-card.active {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 30px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(79, 70, 229, 0.6); }
+            100% { box-shadow: 0 0 30px rgba(79, 70, 229, 0.4); }
+        }
+
+        /* Micro-interactions for form elements */
+        .slider-container {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .slider-container:hover .slider-label {
+            color: var(--accent-color);
+        }
+
+        /* Stagger animation for vibe cards */
+        .vibe-grid .vibe-card {
+            animation: slideInLeft 0.5s ease-out backwards;
+        }
+
+        .vibe-grid .vibe-card:nth-child(1) { animation-delay: 0.1s; }
+        .vibe-grid .vibe-card:nth-child(2) { animation-delay: 0.15s; }
+        .vibe-grid .vibe-card:nth-child(3) { animation-delay: 0.2s; }
+        .vibe-grid .vibe-card:nth-child(4) { animation-delay: 0.25s; }
+        .vibe-grid .vibe-card:nth-child(5) { animation-delay: 0.3s; }
+        .vibe-grid .vibe-card:nth-child(6) { animation-delay: 0.35s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Enhanced sidebar with particle effects */
+        .sidebar {
+            background: var(--secondary-bg);
+            border-radius: 24px;
+            padding: 36px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            backdrop-filter: blur(25px) saturate(180%);
+            animation: sidebarEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+            animation: sidebarParticles 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes sidebarParticles {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .sidebar > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.15),
+                0 0 0 1px rgba(79, 70, 229, 0.2),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        @keyframes sidebarEntry {
+            from {
+                opacity: 0;
+                transform: translateX(-30px) rotateY(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotateY(0deg);
+            }
+        }
+
+        /* Next-level preview area with holographic effects */
+        .preview-area {
+            background: var(--secondary-bg);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            backdrop-filter: blur(25px) saturate(180%);
+            animation: previewEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .preview-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(79, 70, 229, 0.05) 50%,
+                transparent 70%
+            );
+            transform: translateX(-100%);
+            animation: hologramSweep 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes hologramSweep {
+            0%, 90%, 100% { transform: translateX(-100%); }
+            10%, 80% { transform: translateX(100%); }
+        }
+
+        .preview-area:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.15),
+                0 0 0 1px rgba(79, 70, 229, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+
+        @keyframes previewEntry {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .font-preview {
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .font-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .font-sample {
+            font-size: 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .color-swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .color-swatch:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .color-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: center;
+            width: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .color-swatch:hover .color-label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Enhanced section animations */
+        .section {
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .section-title:hover {
+            color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        /* Enhanced header with dynamic effects */
+        .header {
+            padding: 32px 0;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(26, 26, 29, 0.9);
+            backdrop-filter: blur(25px) saturate(180%);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-image: linear-gradient(90deg, transparent, var(--accent-color), transparent) 1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--accent-color) 20%, 
+                rgba(147, 51, 234, 0.8) 50%, 
+                var(--accent-color) 80%, 
+                transparent 100%);
+            animation: headerGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { opacity: 0.5; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1.1); }
+        }
+
+        .header:hover {
+            background: rgba(26, 26, 29, 0.95);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Advanced logo with morphing effect */
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: logoMorph 4s ease-in-out infinite;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: conic-gradient(from 0deg, var(--accent-color), #8b5cf6, var(--accent-color));
+            border-radius: 12px;
+            opacity: 0;
+            filter: blur(8px);
+            transition: all 0.3s ease;
+            z-index: -1;
+            animation: logoMorph 4s ease-in-out infinite;
+        }
+
+        .logo:hover::before {
+            opacity: 0.3;
+            filter: blur(12px);
+            transform: rotate(10deg);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        @keyframes logoMorph {
+            0%, 100% { 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                transform: translateY(0px) skewX(0deg);
+            }
+            25% { 
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                transform: translateY(-1px) skewX(1deg);
+            }
+            50% { 
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                transform: translateY(-2px) skewX(0deg);
+            }
+            75% { 
+                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+                transform: translateY(-1px) skewX(-1deg);
+            }
+        }
+
+        /* Brand analysis enhanced styling */
+        .brand-analysis {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .brand-analysis::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        .analysis-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Code editor styling */
+        .code-editor {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow: auto;
+            max-height: 300px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-lang {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .copy-btn {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .code-content {
+            color: #d4d4d4;
+        }
+
+        .code-selector {
+            color: #d7ba7d;
+        }
+
+        .code-property {
+            color: #9cdcfe;
+            padding-left: 20px;
+        }
+
+        .code-value {
+            color: #ce9178;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        /* Parameter visualization */
+        .parameter-viz {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .viz-bar {
+            height: 8px;
+            background: var(--accent-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .viz-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--gradient-primary);
+            transition: width 0.5s ease;
+        }
+
+        .viz-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Enhanced responsive animations */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .sidebar {
+                position: static;
+                animation: slideInDown 0.6s ease-out;
+            }
+
+            @keyframes slideInDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        /* Scroll-triggered animations */
+        .preview-panel {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Hover effects for export buttons */
+        .export-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.3) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .export-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Enhanced focus states for accessibility */
+        .btn:focus-visible,
+        .custom-input:focus-visible,
+        .slider:focus-visible,
+        .vibe-card:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            scroll-behavior: smooth;
+        }
+
+        /* Add subtle parallax effect to background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: backgroundShift 30s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content {
+                padding: 40px 30px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .export-options {
+                flex-direction: column;
+            }
+            
+            .preview-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">BrandForge Pro</div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="saveStyle()">
+                        💾 Save Style
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetGenerator()">
+                        🔄 Reset
+                    </button>
+                    <button class="btn btn-primary" onclick="generateRandomStyle()">
+                        ✨ Surprise Me
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <div class="section-title">
+                        🎨 Brand Vibes
+                    </div>
+                    <div class="section-subtitle">Choose your brand personality</div>
+                    <div class="vibe-grid" id="vibeGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        ✏️ Custom Description
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="custom-input" id="customVibe" placeholder="e.g., minimal tech startup with warm touches">
+                        <label class="input-label">Custom Brand Description</label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        ⚙️ Style Parameters
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Elegance</span>
+                            <span id="eleganceValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="eleganceSlider">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Boldness</span>
+                            <span id="boldnessValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="boldnessSlider">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Playfulness</span>
+                            <span id="playfulnessValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="playfulnessSlider">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        💾 Export Options
+                    </div>
+                    <div class="export-options">
+                        <button class="btn btn-secondary export-btn" onclick="exportCSS()">
+                            CSS
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportJSON()">
+                            JSON
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportFigma()">
+                            Figma
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportTailwind()">
+                            Tailwind
+                        </button>
+                    </div>
+                    <div id="exportMessage"></div>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <div class="preview-tabs">
+                    <button class="preview-tab active" data-tab="hero" onclick="switchTab('hero', this)">
+                        Hero Section
+                    </button>
+                    <button class="preview-tab" data-tab="details" onclick="switchTab('details', this)">
+                        Style Details
+                    </button>
+                    <button class="preview-tab" data-tab="analysis" onclick="switchTab('analysis', this)">
+                        Brand Analysis
+                    </button>
+                    <button class="preview-tab" data-tab="code" onclick="switchTab('code', this)">
+                        Code
+                    </button>
+                </div>
+                <div class="preview-content">
+                    <div id="loadingState" class="loading-state" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Generating your brand style...</p>
+                    </div>
+                    
+                    <div id="heroTab" class="preview-panel">
+                        <div class="hero-preview" id="heroPreview">
+                            <div class="hero-content" id="heroContent">
+                                <h1 class="hero-title" id="heroTitle">Your Brand Story Starts Here</h1>
+                                <p class="hero-subtitle" id="heroSubtitle">Crafting exceptional experiences with purpose-driven design</p>
+                                <a href="#" class="hero-cta" id="heroCTA">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detailsTab" class="preview-panel" style="display: none;">
+                        <div class="style-details">
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    🔤 Typography
+                                </div>
+                                <div class="font-preview" id="primaryFontPreview">
+                                    <div class="font-name">Primary Font</div>
+                                    <div class="font-sample">Inter</div>
+                                </div>
+                                <div class="font-preview" id="secondaryFontPreview">
+                                    <div class="font-name">Secondary Font</div>
+                                    <div class="font-sample">Playfair Display</div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    🎨 Color Palette
+                                </div>
+                                <div class="color-palette" id="colorPalette">
+                                    <!-- Colors populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    📊 Parameters
+                                </div>
+                                <div class="parameter-viz">
+                                    <div class="viz-bar">
+                                        <div class="viz-fill" id="eleganceViz" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="viz-labels">
+                                        <span>Elegance</span>
+                                        <span id="eleganceVizValue">50%</span>
+                                    </div>
+                                    
+                                    <div class="viz-bar">
+                                        <div class="viz-fill" id="boldnessViz" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="viz-labels">
+                                        <span>Boldness</span>
+                                        <span id="boldnessVizValue">50%</span>
+                                    </div>
+                                    
+                                    <div class="viz-bar">
+                                        <div class="viz-fill" id="playfulnessViz" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="viz-labels">
+                                        <span>Playfulness</span>
+                                        <span id="playfulnessVizValue">50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="analysisTab" class="preview-panel" style="display: none;">
+                        <div class="brand-analysis">
+                            <div class="analysis-title">Brand Personality Analysis</div>
+                            <div class="analysis-text" id="brandAnalysis">
+                                This brand style combines modern sophistication with approachable elegance. The typography choices reflect professionalism while maintaining readability across all touchpoints.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="codeTab" class="preview-panel" style="display: none;">
+                        <div class="code-header">
+                            <div class="code-lang">CSS Variables</div>
+                            <button class="copy-btn" onclick="copyCode()">Copy</button>
+                        </div>
+                        <div class="code-editor">
+                            <div class="code-content" id="codeContent">
+                                <span class="code-comment">/* Generated CSS Variables */</span><br>
+                                <span class="code-selector">:root</span> {<br>
+                                <span class="code-property">--primary-font</span>: <span class="code-value" id="codePrimaryFont">'Inter', sans-serif</span>;<br>
+                                <span class="code-property">--secondary-font</span>: <span class="code-value" id="codeSecondaryFont">'Playfair Display', serif</span>;<br>
+                                <span class="code-property">--color-primary</span>: <span class="code-value" id="codeColorPrimary">#000000</span>;<br>
+                                <span class="code-property">--color-secondary</span>: <span class="code-value" id="codeColorSecondary">#ffffff</span>;<br>
+                                <span class="code-property">--color-accent</span>: <span class="code-value" id="codeColorAccent">#4f46e5</span>;<br>
+                                <span class="code-property">--color-highlight</span>: <span class="code-value" id="codeColorHighlight">#8b5cf6</span>;<br>
+                                <span class="code-property">--color-text</span>: <span class="code-value" id="codeColorText">#f1f5f9</span>;<br>
+                                <span class="code-property">--gradient-primary</span>: <span class="code-value" id="codeGradient">linear-gradient(135deg, #667eea 0%, #764ba2 100%)</span>;<br>
+                                }<br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Brand style configurations
+        const brandVibes = [
+            {
+                id: 'techy-elegant',
+                name: 'Tech Elegant',
+                desc: 'Clean, modern, sophisticated',
+                primaryFont: 'Inter',
+                secondaryFont: 'JetBrains Mono',
+                colors: ['#000000', '#ffffff', '#4f46e5', '#8b5cf6', '#f1f5f9'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'A sophisticated tech aesthetic that balances cutting-edge innovation with timeless elegance. Perfect for SaaS products, tech consultancies, and innovative digital services.'
+            },
+            {
+                id: 'warm-friendly',
+                name: 'Warm Friendly',
+                desc: 'Approachable, cozy, inviting',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Merriweather',
+                colors: ['#7c2d12', '#fed7aa', '#f97316', '#fbbf24', '#fef3c7'],
+                gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+                analysis: 'A welcoming brand that prioritizes human connection and emotional warmth in every interaction. Ideal for community platforms, wellness brands, and family-oriented businesses.'
+            },
+            {
+                id: 'bold-creative',
+                name: 'Bold Creative',
+                desc: 'Vibrant, artistic, energetic',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Playfair Display',
+                colors: ['#1a1a2e', '#16213e', '#e94560', '#f39c12', '#ffffff'],
+                gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                analysis: 'An expressive brand that celebrates creativity and isn\'t afraid to make bold visual statements. Perfect for creative agencies, art platforms, and youth-focused brands.'
+            },
+            {
+                id: 'minimal-clean',
+                name: 'Minimal Clean',
+                desc: 'Simple, pure, focused',
+                primaryFont: 'Inter',
+                secondaryFont: 'Source Sans Pro',
+                colors: ['#fafafa', '#374151', '#6b7280', '#d1d5db', '#000000'],
+                gradient: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                analysis: 'A refined minimalist approach that lets content breathe and focuses on essential elements. Ideal for productivity tools, editorial platforms, and luxury minimalist brands.'
+            },
+            {
+                id: 'luxury-premium',
+                name: 'Luxury Premium',
+                desc: 'Exclusive, refined, high-end',
+                primaryFont: 'Playfair Display',
+                secondaryFont: 'Inter',
+                colors: ['#1f2937', '#d4af37', '#ffffff', '#f3f4f6', '#111827'],
+                gradient: 'linear-gradient(135deg, #434343 0%, black 100%)',
+                analysis: 'An upscale brand identity that conveys exclusivity, craftsmanship, and premium quality. Perfect for luxury goods, high-end services, and premium subscription products.'
+            },
+            {
+                id: 'playful-fun',
+                name: 'Playful Fun',
+                desc: 'Cheerful, dynamic, youthful',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Inter',
+                colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b'],
+                gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                analysis: 'A vibrant brand that embraces joy, creativity, and positive energy in its visual language. Ideal for children\'s products, gaming platforms, and lifestyle brands.'
+            }
+        ];
+
+        let currentStyle = brandVibes[0];
+        let isGenerating = false;
+
+        // Initialize the application
+        function initApp() {
+            populateVibeGrid();
+            setupEventListeners();
+            loadSavedStyle();
+            generateStyle();
+        }
+
+        // Populate vibe selection grid
+        function populateVibeGrid() {
+            const grid = document.getElementById('vibeGrid');
+            grid.innerHTML = brandVibes.map((vibe, index) => `
+                <div class="vibe-card ${index === 0 ? 'active' : ''}" onclick="selectVibe('${vibe.id}', this)">
+                    <div class="vibe-name">${vibe.name}</div>
+                    <div class="vibe-desc">${vibe.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sliders
+            ['elegance', 'boldness', 'playfulness'].forEach(param => {
+                const slider = document.getElementById(`${param}Slider`);
+                const valueLabel = document.getElementById(`${param}Value`);
+                
+                slider.addEventListener('input', (e) => {
+                    valueLabel.textContent = e.target.value;
+                    updateParameterViz(param, e.target.value);
+                    debounceGenerateStyle();
+                });
+            });
+
+            // Custom input
+            document.getElementById('customVibe').addEventListener('input', debounceGenerateStyle);
+        }
+
+        // Update parameter visualization
+        function updateParameterViz(param, value) {
+            document.getElementById(`${param}Viz`).style.width = `${value}%`;
+            document.getElementById(`${param}VizValue`).textContent = `${value}%`;
+        }
+
+        // Debounced style generation
+        let debounceTimer;
+        function debounceGenerateStyle() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generateStyle, 300);
+        }
+
+        // Select brand vibe
+        function selectVibe(vibeId, element) {
+            // Remove active class from all cards
+            document.querySelectorAll('.vibe-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            element.classList.add('active');
+            
+            // Find and set current style
+            currentStyle = brandVibes.find(vibe => vibe.id === vibeId);
+            generateStyle();
+        }
+
+        // Generate style based on current selections
+        function generateStyle() {
+            if (isGenerating) return;
+            
+            showLoading(true);
+            
+            setTimeout(() => {
+                const customVibe = document.getElementById('customVibe').value;
+                const elegance = parseInt(document.getElementById('eleganceSlider').value);
+                const boldness = parseInt(document.getElementById('boldnessSlider').value);
+                const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+
+                // Generate dynamic style based on parameters
+                const dynamicStyle = generateDynamicStyle(currentStyle, {
+                    customVibe,
+                    elegance,
+                    boldness,
+                    playfulness
+                });
+
+                updatePreview(dynamicStyle);
+                updateStyleDetails(dynamicStyle);
+                updateBrandAnalysis(dynamicStyle);
+                updateCodeView(dynamicStyle);
+                showLoading(false);
+            }, 800);
+        }
+
+        // Generate dynamic style variations
+        function generateDynamicStyle(baseStyle, params) {
+            const style = { ...baseStyle };
+            
+            // Modify colors based on parameters
+            if (params.boldness > 70) {
+                style.colors = adjustColorBrightness(style.colors, 1.2);
+            } else if (params.boldness < 30) {
+                style.colors = adjustColorBrightness(style.colors, 0.8);
+            }
+
+            // Adjust typography based on elegance
+            if (params.elegance > 70) {
+                if (Math.random() > 0.5) {
+                    style.primaryFont = 'Playfair Display';
+                    style.secondaryFont = 'Inter';
+                } else {
+                    style.primaryFont = 'Lora';
+                    style.secondaryFont = 'Source Sans Pro';
+                }
+            } else if (params.elegance < 30) {
+                style.primaryFont = 'Inter';
+                style.secondaryFont = 'Source Sans Pro';
+            }
+
+            // Adjust gradient based on playfulness
+            if (params.playfulness > 70) {
+                style.gradient = 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)';
+            } else if (params.playfulness < 30 && params.elegance > 70) {
+                style.gradient = 'linear-gradient(135deg, #434343 0%, black 100%)';
+            }
+
+            // Update analysis based on custom vibe and parameters
+            style.analysis = generateDynamicAnalysis(params, baseStyle.analysis);
+
+            return style;
+        }
+
+        // Adjust color brightness
+        function adjustColorBrightness(colors, factor) {
+            return colors.map(color => {
+                if (color === '#ffffff' || color === '#000000') return color;
+                
+                // Convert hex to RGB
+                let r = parseInt(color.slice(1, 3), 16);
+                let g = parseInt(color.slice(3, 5), 16);
+                let b = parseInt(color.slice(5, 7), 16);
+                
+                // Adjust brightness
+                r = Math.min(255, Math.max(0, Math.floor(r * factor)));
+                g = Math.min(255, Math.max(0, Math.floor(g * factor)));
+                b = Math.min(255, Math.max(0, Math.floor(b * factor)));
+                
+                // Convert back to hex
+                return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+            });
+        }
+
+        // Generate dynamic brand analysis
+        function generateDynamicAnalysis(params, baseAnalysis) {
+            let analysis = baseAnalysis;
+            
+            if (params.customVibe) {
+                analysis += ` The custom direction "${params.customVibe}" adds unique personality traits that differentiate this brand in the market.`;
+            }
+
+            if (params.elegance > 70) {
+                analysis += " The high elegance score creates a sophisticated and refined impression.";
+            } else if (params.elegance < 30) {
+                analysis += " The lower elegance prioritizes approachability over formality.";
+            }
+
+            if (params.boldness > 70) {
+                analysis += " The bold approach ensures strong visual impact and memorable brand presence.";
+            } else if (params.boldness < 30) {
+                analysis += " The subtle approach creates a calm, trustworthy impression.";
+            }
+
+            if (params.playfulness > 70) {
+                analysis += " Playful elements add personality and human connection to the brand experience.";
+            } else if (params.playfulness < 30) {
+                analysis += " The serious tone conveys professionalism and reliability.";
+            }
+
+            return analysis;
+        }
+
+        // Update hero preview
+        function updatePreview(style) {
+            const heroContent = document.getElementById('heroContent');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            const heroCTA = document.getElementById('heroCTA');
+
+            // Apply styles
+            heroContent.style.background = style.gradient;
+            heroContent.style.fontFamily = style.primaryFont;
+            
+            heroTitle.style.fontFamily = style.primaryFont;
+            heroTitle.style.color = style.colors[4] || '#ffffff';
+            
+            heroSubtitle.style.fontFamily = style.secondaryFont;
+            heroSubtitle.style.color = style.colors[4] || '#ffffff';
+            
+            heroCTA.style.backgroundColor = style.colors[2] || '#4f46e5';
+            heroCTA.style.color = style.colors[4] || '#ffffff';
+            heroCTA.style.fontFamily = style.primaryFont;
+        }
+
+        // Update style details panel
+        function updateStyleDetails(style) {
+            // Update font previews
+            const primaryFontPreview = document.getElementById('primaryFontPreview');
+            const secondaryFontPreview = document.getElementById('secondaryFontPreview');
+            
+            primaryFontPreview.querySelector('.font-sample').textContent = style.primaryFont;
+            primaryFontPreview.querySelector('.font-sample').style.fontFamily = style.primaryFont;
+            
+            secondaryFontPreview.querySelector('.font-sample').textContent = style.secondaryFont;
+            secondaryFontPreview.querySelector('.font-sample').style.fontFamily = style.secondaryFont;
+
+            // Update color palette
+            const colorPalette = document.getElementById('colorPalette');
+            colorPalette.innerHTML = style.colors.map((color, index) => `
+                <div class="color-swatch" style="background-color: ${color}" onclick="copyToClipboard('${color}')">
+                    <div class="color-label">${color.toUpperCase()}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update code view
+        function updateCodeView(style) {
+            document.getElementById('codePrimaryFont').textContent = `'${style.primaryFont}', sans-serif`;
+            document.getElementById('codeSecondaryFont').textContent = `'${style.secondaryFont}', serif`;
+            document.getElementById('codeColorPrimary').textContent = style.colors[0];
+            document.getElementById('codeColorSecondary').textContent = style.colors[1];
+            document.getElementById('codeColorAccent').textContent = style.colors[2];
+            document.getElementById('codeColorHighlight').textContent = style.colors[3];
+            document.getElementById('codeColorText').textContent = style.colors[4];
+            document.getElementById('codeGradient').textContent = style.gradient;
+        }
+
+        // Update brand analysis
+        function updateBrandAnalysis(style) {
+            document.getElementById('brandAnalysis').textContent = style.analysis;
+        }
+
+        // Show/hide loading state
+        function showLoading(show) {
+            isGenerating = show;
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+            document.querySelector('.preview-panel:not([style*="display: none"])').style.display = show ? 'none' : 'block';
+        }
+
+        // Switch preview tabs
+        function switchTab(tabName, element) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.preview-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            element.classList.add('active');
+            
+            // Hide all panels
+            document.querySelectorAll('.preview-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            
+            // Show selected panel
+            document.getElementById(`${tabName}Tab`).style.display = 'block';
+        }
+
+        // Generate random style
+        function generateRandomStyle() {
+            // Select random vibe
+            const randomVibe = brandVibes[Math.floor(Math.random() * brandVibes.length)];
+            currentStyle = randomVibe;
+            
+            // Update UI
+            document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                card.classList.toggle('active', brandVibes[index].id === randomVibe.id);
+            });
+            
+            // Set random slider values
+            document.getElementById('eleganceSlider').value = Math.floor(Math.random() * 100);
+            document.getElementById('boldnessSlider').value = Math.floor(Math.random() * 100);
+            document.getElementById('playfulnessSlider').value = Math.floor(Math.random() * 100);
+            
+            // Update slider labels
+            document.getElementById('eleganceValue').textContent = document.getElementById('eleganceSlider').value;
+            document.getElementById('boldnessValue').textContent = document.getElementById('boldnessSlider').value;
+            document.getElementById('playfulnessValue').textContent = document.getElementById('playfulnessSlider').value;
+            
+            // Update visualizations
+            updateParameterViz('elegance', document.getElementById('eleganceSlider').value);
+            updateParameterViz('boldness', document.getElementById('boldnessSlider').value);
+            updateParameterViz('playfulness', document.getElementById('playfulnessSlider').value);
+            
+            // Clear custom vibe
+            document.getElementById('customVibe').value = '';
+            
+            generateStyle();
+        }
+
+        // Reset generator
+        function resetGenerator() {
+            // Reset to first vibe
+            currentStyle = brandVibes[0];
+            
+            // Update vibe cards
+            document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                card.classList.toggle('active', index === 0);
+            });
+            
+            // Reset sliders
+            document.getElementById('eleganceSlider').value = 50;
+            document.getElementById('boldnessSlider').value = 50;
+            document.getElementById('playfulnessSlider').value = 50;
+            
+            // Update labels
+            document.getElementById('eleganceValue').textContent = '50';
+            document.getElementById('boldnessValue').textContent = '50';
+            document.getElementById('playfulnessValue').textContent = '50';
+            
+            // Update visualizations
+            updateParameterViz('elegance', 50);
+            updateParameterViz('boldness', 50);
+            updateParameterViz('playfulness', 50);
+            
+            // Clear custom vibe
+            document.getElementById('customVibe').value = '';
+            
+            // Clear export message
+            document.getElementById('exportMessage').innerHTML = '';
+            
+            generateStyle();
+        }
+
+        // Save current style to local storage
+        function saveStyle() {
+            const styleData = {
+                vibe: currentStyle.id,
+                elegance: parseInt(document.getElementById('eleganceSlider').value),
+                boldness: parseInt(document.getElementById('boldnessSlider').value),
+                playfulness: parseInt(document.getElementById('playfulnessSlider').value),
+                customVibe: document.getElementById('customVibe').value
+            };
+            
+            localStorage.setItem('brandforgeStyle', JSON.stringify(styleData));
+            showExportMessage('Style saved successfully!');
+        }
+
+        // Load saved style from local storage
+        function loadSavedStyle() {
+            const savedStyle = localStorage.getItem('brandforgeStyle');
+            if (savedStyle) {
+                const styleData = JSON.parse(savedStyle);
+                
+                // Set vibe
+                currentStyle = brandVibes.find(vibe => vibe.id === styleData.vibe) || brandVibes[0];
+                
+                // Update UI
+                document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                    card.classList.toggle('active', brandVibes[index].id === currentStyle.id);
+                });
+                
+                // Set sliders
+                document.getElementById('eleganceSlider').value = styleData.elegance || 50;
+                document.getElementById('boldnessSlider').value = styleData.boldness || 50;
+                document.getElementById('playfulnessSlider').value = styleData.playfulness || 50;
+                
+                // Update labels
+                document.getElementById('eleganceValue').textContent = styleData.elegance || 50;
+                document.getElementById('boldnessValue').textContent = styleData.boldness || 50;
+                document.getElementById('playfulnessValue').textContent = styleData.playfulness || 50;
+                
+                // Update visualizations
+                updateParameterViz('elegance', styleData.elegance || 50);
+                updateParameterViz('boldness', styleData.boldness || 50);
+                updateParameterViz('playfulness', styleData.playfulness || 50);
+                
+                // Set custom vibe
+                document.getElementById('customVibe').value = styleData.customVibe || '';
+            }
+        }
+
+        // Export functions
+        function exportCSS() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const css = `
+/* Generated Brand Style CSS */
+:root {
+    --primary-font: '${dynamicStyle.primaryFont}', sans-serif;
+    --secondary-font: '${dynamicStyle.secondaryFont}', serif;
+    --color-primary: ${dynamicStyle.colors[0]};
+    --color-secondary: ${dynamicStyle.colors[1]};
+    --color-accent: ${dynamicStyle.colors[2]};
+    --color-highlight: ${dynamicStyle.colors[3]};
+    --color-text: ${dynamicStyle.colors[4]};
+    --gradient-primary: ${dynamicStyle.gradient};
+}
+
+.brand-title { 
+    font-family: var(--primary-font);
+    color: var(--color-text);
+}
+
+.brand-body { 
+    font-family: var(--secondary-font);
+    color: var(--color-text);
+}
+
+.brand-button {
+    background: var(--color-accent);
+    color: var(--color-text);
+    font-family: var(--primary-font);
+}
+
+.brand-hero {
+    background: var(--gradient-primary);
+}`;
+
+            copyToClipboard(css);
+            showExportMessage('CSS exported to clipboard!');
+        }
+
+        function exportJSON() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const jsonData = {
+                brandStyle: {
+                    id: dynamicStyle.id,
+                    name: dynamicStyle.name,
+                    typography: {
+                        primary: dynamicStyle.primaryFont,
+                        secondary: dynamicStyle.secondaryFont
+                    },
+                    colors: {
+                        primary: dynamicStyle.colors[0],
+                        secondary: dynamicStyle.colors[1],
+                        accent: dynamicStyle.colors[2],
+                        highlight: dynamicStyle.colors[3],
+                        text: dynamicStyle.colors[4]
+                    },
+                    gradient: dynamicStyle.gradient,
+                    parameters: {
+                        elegance: elegance,
+                        boldness: boldness,
+                        playfulness: playfulness
+                    },
+                    analysis: dynamicStyle.analysis,
+                    generatedAt: new Date().toISOString()
+                }
+            };
+
+            copyToClipboard(JSON.stringify(jsonData, null, 2));
+            showExportMessage('JSON exported to clipboard!');
+        }
+
+        function exportFigma() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const figmaTokens = `{
+  "typography": {
+    "primary": {
+      "fontFamily": "${dynamicStyle.primaryFont}",
+      "fontWeight": "600"
+    },
+    "secondary": {
+      "fontFamily": "${dynamicStyle.secondaryFont}",
+      "fontWeight": "400"
+    }
+  },
+  "colors": {
+    "primary": "${dynamicStyle.colors[0]}",
+    "secondary": "${dynamicStyle.colors[1]}",
+    "accent": "${dynamicStyle.colors[2]}",
+    "highlight": "${dynamicStyle.colors[3]}",
+    "text": "${dynamicStyle.colors[4]}"
+  },
+  "effects": {
+    "gradient-primary": "${dynamicStyle.gradient}"
+  }
+}`;
+
+            copyToClipboard(figmaTokens);
+            showExportMessage('Figma tokens exported to clipboard!');
+        }
+
+        function exportTailwind() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const tailwindConfig = `
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        primary: ['${dynamicStyle.primaryFont}', 'sans-serif'],
+        secondary: ['${dynamicStyle.secondaryFont}', 'serif'],
+      },
+      colors: {
+        primary: '${dynamicStyle.colors[0]}',
+        secondary: '${dynamicStyle.colors[1]}',
+        accent: '${dynamicStyle.colors[2]}',
+        highlight: '${dynamicStyle.colors[3]}',
+        text: '${dynamicStyle.colors[4]}',
+      },
+      backgroundImage: {
+        'gradient-primary': '${dynamicStyle.gradient}',
+      }
+    }
+  }
+}`;
+
+            copyToClipboard(tailwindConfig);
+            showExportMessage('Tailwind config exported to clipboard!');
+        }
+
+        // Copy code to clipboard
+        function copyCode() {
+            const code = document.getElementById('codeContent').innerText;
+            copyToClipboard(code);
+            showExportMessage('Code copied to clipboard!');
+        }
+
+        // Helper functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function showExportMessage(message) {
+            const messageEl = document.getElementById('exportMessage');
+            messageEl.innerHTML = `<div class="success-message">✅ ${message}</div>`;
+            setTimeout(() => {
+                messageEl.innerHTML = '';
+            }, 3000);
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
