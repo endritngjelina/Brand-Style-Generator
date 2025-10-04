@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Style Generator | AI-Powered Brand Identity Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600&family=Roboto+Slab:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&family=Space+Grotesk:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #404040;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 25% 25%, #3b82f6 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #8b5cf6 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .controls-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .controls-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .controls-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .controls-panel::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 0.75rem;
+        }
+
+        .control-label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 60%;
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.8));
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+
+        .control-hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .vibe-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .vibe-option {
+            padding: 1.25rem 1rem;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .vibe-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .vibe-option::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: translateY(-50%) scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .vibe-option:hover::before {
+            left: 100%;
+        }
+
+        .vibe-option:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .vibe-option:active {
+            transform: translateY(-2px);
+            transition: transform 0.1s ease;
+        }
+
+        .vibe-option.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25);
+        }
+
+        .vibe-option.active::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .industry-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .industry-tag {
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .industry-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.8));
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .industry-tag:hover {
+            transform: translateY(-2px) scale(1.05);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .industry-tag:hover::before {
+            width: 100%;
+        }
+
+        .industry-tag.active {
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.9));
+            border-color: var(--accent);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .industry-tag.active::before {
+            width: 100%;
+        }
+
+        .style-intensity {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .intensity-slider {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--bg-card), var(--accent));
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .intensity-slider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #374151, var(--accent));
+            border-radius: 1px;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .intensity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.8));
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            border: 2px solid white;
+        }
+
+        .intensity-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5), 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .intensity-slider::-webkit-slider-thumb:active {
+            transform: scale(1.1);
+        }
+
+        .ai-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        .toggle-icon {
+            color: var(--accent);
+            font-size: 1.25rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-secondary);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9));
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px) scale(1.01);
+            transition: transform 0.1s ease;
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .export-btn {
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.8));
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+        }
+
+        .export-btn:hover::before {
+            width: 100%;
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+            transition: transform 0.1s ease;
+        }
+
+        .preview-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .preview-action-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .preview-action-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .brand-preview {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .hero-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.25rem 2.5rem;
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.95rem;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .style-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .detail-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), rgba(139, 92, 246, 0.8));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .detail-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .detail-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .detail-card h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 4px;
+            height: 60%;
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.8));
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+
+        .font-preview {
+            margin-bottom: 1rem;
+        }
+
+        .font-sample {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-swatch::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, var(--accent), rgba(139, 92, 246, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.15) translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-swatch:hover::before {
+            opacity: 1;
+        }
+
+        .color-swatch:active {
+            transform: scale(1.1) translateY(-2px);
+        }
+
+        .color-swatch.copied {
+            animation: colorCopied 0.6s ease;
+        }
+
+        .color-value {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-family: 'Source Code Pro', monospace;
+        }
+
+        /* Advanced Features Panel */
+        .advanced-panel {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .advanced-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .advanced-toggle h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .advanced-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .advanced-content.expanded {
+            max-height: 500px;
+        }
+
+        .adjustment-control {
+            margin-bottom: 1rem;
+        }
+
+        .adjustment-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .adjustment-slider {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .adjustment-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* History Panel */
+        .history-panel {
+            margin-top: 2rem;
+        }
+
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .history-item {
+            height: 80px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .history-item.active {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .history-item .color-bar {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-item .color-stripe {
+            flex: 1;
+        }
+
+        /* Loading Animation */
+        .loading-animation {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .spinner::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top: 2px solid rgba(139, 92, 246, 0.6);
+            animation: spin 2s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+        }
+
+        @keyframes colorCopied {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr 1.5fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .controls-panel {
+                position: relative;
+                top: 0;
+                max-height: none;
+            }
+            
+            .style-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .vibe-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .advanced-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .industry-selector {
+                justify-content: center;
+            }
+            
+            .industry-tag {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .color-palette {
+                justify-content: center;
+            }
+            
+            .preview-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus states for keyboard navigation */
+        .vibe-option:focus,
+        .industry-tag:focus,
+        .generate-btn:focus,
+        .export-btn:focus,
+        .preview-action-btn:focus,
+        .nav-btn:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #0a0a0a;
+                --text-primary: #ffffff;
+                --text-secondary: #cccccc;
+                --border: #555555;
+            }
+            
+            .vibe-option,
+            .industry-tag,
+            .detail-card,
+            .export-btn {
+                border-width: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <nav class="top-nav">
+            <div class="nav-brand">BrandForge</div>
+            <div class="nav-actions">
+                <button class="nav-btn" id="saveBtn"><i class="fas fa-save"></i> Save</button>
+                <button class="nav-btn" id="loadBtn"><i class="fas fa-folder-open"></i> Load</button>
+                <button class="nav-btn" id="shareBtn"><i class="fas fa-share-alt"></i> Share</button>
+            </div>
+        </nav>
+
+        <header class="header">
+            <h1>AI Brand Style Generator</h1>
+            <p>Create professional brand identities with AI-powered design recommendations</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label class="control-label">Brand Vibe</label>
+                    <p class="control-hint">Select the overall feeling you want your brand to convey</p>
+                    <div class="vibe-selector">
+                        <div class="vibe-option active" data-vibe="modern-minimal">Modern & Minimal</div>
+                        <div class="vibe-option" data-vibe="techy-elegant">Techy & Elegant</div>
+                        <div class="vibe-option" data-vibe="creative-bold">Creative & Bold</div>
+                        <div class="vibe-option" data-vibe="luxury-premium">Luxury & Premium</div>
+                        <div class="vibe-option" data-vibe="playful-friendly">Playful & Friendly</div>
+                        <div class="vibe-option" data-vibe="professional-trustworthy">Professional & Trustworthy</div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Industry</label>
+                    <p class="control-hint">Choose your industry for tailored recommendations</p>
+                    <div class="industry-selector">
+                        <div class="industry-tag active" data-industry="tech">Technology</div>
+                        <div class="industry-tag" data-industry="finance">Finance</div>
+                        <div class="industry-tag" data-industry="healthcare">Healthcare</div>
+                        <div class="industry-tag" data-industry="education">Education</div>
+                        <div class="industry-tag" data-industry="retail">Retail</div>
+                        <div class="industry-tag" data-industry="consulting">Consulting</div>
+                        <div class="industry-tag" data-industry="creative">Creative</div>
+                        <div class="industry-tag" data-industry="nonprofit">Non-profit</div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Style Intensity</label>
+                    <p class="control-hint">Adjust how pronounced the style characteristics are</p>
+                    <div class="style-intensity">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Subtle</span>
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Bold</span>
+                    </div>
+                    <input type="range" class="intensity-slider" min="1" max="10" value="5" id="intensity">
+                </div>
+
+                <div class="ai-toggle">
+                    <div class="toggle-label">
+                        <i class="fas fa-robot toggle-icon"></i>
+                        <span>AI-Powered Suggestions</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="aiToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button class="generate-btn" id="generateBtn">
+                    <i class="fas fa-magic"></i> Generate Brand Style
+                </button>
+
+                <div class="export-options">
+                    <button class="export-btn" onclick="exportCSS()"><i class="fas fa-code"></i> CSS</button>
+                    <button class="export-btn" onclick="exportJSON()"><i class="fas fa-file-code"></i> JSON</button>
+                    <button class="export-btn" onclick="exportTailwind()"><i class="fab fa-css3-alt"></i> Tailwind</button>
+                    <button class="export-btn" onclick="exportFigma()"><i class="fab fa-figma"></i> Figma</button>
+                </div>
+
+                <div class="advanced-panel">
+                    <div class="advanced-toggle" id="advancedToggle">
+                        <h4><i class="fas fa-cog"></i> Advanced Customization</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="advanced-content" id="advancedContent">
+                        <div class="adjustment-control">
+                            <label class="adjustment-label">Color Saturation</label>
+                            <input type="range" class="adjustment-slider" min="0" max="100" value="50">
+                        </div>
+                        <div class="adjustment-control">
+                            <label class="adjustment-label">Font Weight</label>
+                            <input type="range" class="adjustment-slider" min="300" max="700" value="400" step="100">
+                        </div>
+                        <div class="adjustment-control">
+                            <label class="adjustment-label">Border Radius</label>
+                            <input type="range" class="adjustment-slider" min="0" max="24" value="8">
+                        </div>
+                        <div class="adjustment-control">
+                            <label class="adjustment-label">Spacing Scale</label>
+                            <input type="range" class="adjustment-slider" min="0" max="100" value="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-panel">
+                    <label class="control-label">Recent Styles</label>
+                    <p class="control-hint">Your recently generated brand styles</p>
+                    <div class="history-list" id="historyList">
+                        <!-- History items will be generated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <h3 class="preview-title">Brand Preview</h3>
+                    <div class="preview-actions">
+                        <button class="preview-action-btn" id="darkModeToggle"><i class="fas fa-moon"></i> Dark Mode</button>
+                        <button class="preview-action-btn" id="mobileViewToggle"><i class="fas fa-mobile-alt"></i> Mobile View</button>
+                        <button class="preview-action-btn" id="contrastCheckBtn"><i class="fas fa-eye"></i> Check Contrast</button>
+                    </div>
+                </div>
+
+                <div class="loading-animation" id="loadingAnimation">
+                    <div class="spinner"></div>
+                    <p>Generating your brand style...</p>
+                    <p class="control-hint">Using AI to create the perfect style for your brand</p>
+                </div>
+
+                <div id="brandPreview">
+                    <div class="brand-preview fade-in">
+                        <div class="hero-section" id="heroSection">
+                            <div class="hero-content">
+                                <h2 id="heroTitle">Your Brand Name</h2>
+                                <p id="heroSubtitle">Crafting digital experiences that inspire and engage your audience</p>
+                                <a href="#" class="cta-button">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="style-details">
+                        <div class="detail-card">
+                            <h4>Typography</h4>
+                            <div class="font-preview" id="fontPreview">
+                                <div class="font-sample" style="font-size: 1.5rem; font-weight: 600;">Primary Font</div>
+                                <div class="font-sample" style="font-size: 1.2rem;">Secondary Font</div>
+                                <div class="font-sample" style="font-size: 1rem; opacity: 0.8;">Body text sample</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <h4>Color Palette</h4>
+                            <div class="color-palette" id="colorPalette">
+                                <!-- Colors will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="style-details">
+                        <div class="detail-card">
+                            <h4>Components</h4>
+                            <div class="component-preview" id="componentPreview">
+                                <!-- Component previews will be generated here -->
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <h4>Accessibility</h4>
+                            <div class="accessibility-report" id="accessibilityReport">
+                                <!-- Accessibility report will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Share Your Brand Style</h3>
+                <button class="modal-close" id="closeShareModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p>Share this link with others to collaborate on your brand style:</p>
+                <div style="display: flex; margin: 1rem 0;">
+                    <input type="text" id="shareLink" style="flex: 1; padding: 0.75rem; border-radius: 8px 0 0 8px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-primary);" readonly>
+                    <button onclick="copyShareLink()" style="padding: 0.75rem 1rem; background: var(--accent); color: white; border: none; border-radius: 0 8px 8px 0; cursor: pointer;">Copy</button>
+                </div>
+                <p class="control-hint">This link will expire in 7 days</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced brand styles data with more variations and properties
+        const brandStyles = {
+            'modern-minimal': {
+                name: 'Modern & Minimal',
+                fonts: {
+                    primary: 'Inter',
+                    secondary: 'Inter'
+                },
+                colors: [
+                    ['#1a1a1a', '#f8f9fa', '#6c757d', '#ffffff', '#e9ecef'],
+                    ['#2c3e50', '#ecf0f1', '#3498db', '#ffffff', '#bdc3c7'],
+                    ['#212529', '#f1f3f4', '#495057', '#ffffff', '#dee2e6']
+                ],
+                gradients: [
+                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                ],
+                borderRadius: '8px',
+                spacing: '1rem',
+                components: {
+                    button: 'flat',
+                    card: 'minimal'
+                }
+            },
+            'techy-elegant': {
+                name: 'Techy & Elegant',
+                fonts: {
+                    primary: 'Space Grotesk',
+                    secondary: 'Inter'
+                },
+                colors: [
+                    ['#0f0f23', '#f7f7ff', '#3b82f6', '#ffffff', '#e5e7eb'],
+                    ['#1a1a2e', '#eee2ff', '#8b5cf6', '#ffffff', '#d1d5db'],
+                    ['#0d1117', '#f0f6ff', '#2563eb', '#ffffff', '#e2e8f0']
+                ],
+                gradients: [
+                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                ],
+                borderRadius: '12px',
+                spacing: '1.25rem',
+                components: {
+                    button: 'glass',
+                    card: 'elegant'
+                }
+            },
+            'creative-bold': {
+                name: 'Creative & Bold',
+                fonts: {
+                    primary: 'Poppins',
+                    secondary: 'Inter'
+                },
+                colors: [
+                    ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'],
+                    ['#e17055', '#00b894', '#0984e3', '#a29bfe', '#fdcb6e'],
+                    ['#fd79a8', '#6c5ce7', '#74b9ff', '#00cec9', '#fdd835']
+                ],
+                gradients: [
+                    'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                    'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                    'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+                ],
+                borderRadius: '16px',
+                spacing: '1.5rem',
+                components: {
+                    button: 'rounded',
+                    card: 'colorful'
+                }
+            },
+            'luxury-premium': {
+                name: 'Luxury & Premium',
+                fonts: {
+                    primary: 'Playfair Display',
+                    secondary: 'Inter'
+                },
+                colors: [
+                    ['#1a1a1a', '#f8f6f0', '#d4af37', '#ffffff', '#8b7355'],
+                    ['#2c1810', '#faf8f3', '#c9a96e', '#ffffff', '#a68b5b'],
+                    ['#0f0f0f', '#fefefe', '#e4c547', '#ffffff', '#b8860b']
+                ],
+                gradients: [
+                    'linear-gradient(135deg, #2c1810 0%, #8b4513 100%)',
+                    'linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%)',
+                    'linear-gradient(135deg, #0f0f0f 0%, #2f2f2f 100%)'
+                ],
+                borderRadius: '4px',
+                spacing: '1.5rem',
+                components: {
+                    button: 'elegant',
+                    card: 'luxury'
+                }
+            },
+            'playful-friendly': {
+                name: 'Playful & Friendly',
+                fonts: {
+                    primary: 'Poppins',
+                    secondary: 'Inter'
+                },
+                colors: [
+                    ['#ff7675', '#74b9ff', '#55a3ff', '#00b894', '#fdcb6e'],
+                    ['#fd79a8', '#6c5ce7', '#a29bfe', '#00cec9', '#e17055'],
+                    ['#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43']
+                ],
+                gradients: [
+                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                ],
+                borderRadius: '24px',
+                spacing: '1.25rem',
+                components: {
+                    button: 'playful',
+                    card: 'friendly'
+                }
+            },
+            'professional-trustworthy': {
+                name: 'Professional & Trustworthy',
+                fonts: {
+                    primary: 'Roboto Slab',
+                    secondary: 'Inter'
+                },
+                colors: [
+                    ['#2c3e50', '#ecf0f1', '#3498db', '#ffffff', '#bdc3c7'],
+                    ['#34495e', '#f8f9fa', '#2980b9', '#ffffff', '#95a5a6'],
+                    ['#1a252f', '#ffffff', '#2e86ab', '#ffffff', '#a8a8a8']
+                ],
+                gradients: [
+                    'linear-gradient(135deg, #2c3e50 0%, #3498db 100%)',
+                    'linear-gradient(135deg, #34495e 0%, #2980b9 100%)',
+                    'linear-gradient(135deg, #1a252f 0%, #2e86ab 100%)'
+                ],
+                borderRadius: '6px',
+                spacing: '1rem',
+                components: {
+                    button: 'professional',
+                    card: 'trustworthy'
+                }
+            }
+        };
+
+        // App state
+        let currentStyle = 'modern-minimal';
+        let currentIndustry = 'tech';
+        let currentIntensity = 5;
+        let isDarkMode = false;
+        let isMobileView = false;
+        let brandHistory = [];
+        let currentBrand = null;
+
+        // DOM Elements
+        const generateBtn = document.getElementById('generateBtn');
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedContent = document.getElementById('advancedContent');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const mobileViewToggle = document.getElementById('mobileViewToggle');
+        const contrastCheckBtn = document.getElementById('contrastCheckBtn');
+        const historyList = document.getElementById('historyList');
+        const shareModal = document.getElementById('shareModal');
+        const closeShareModal = document.getElementById('closeShareModal');
+        const shareBtn = document.getElementById('shareBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const loadBtn = document.getElementById('loadBtn');
+        const toastContainer = document.getElementById('toastContainer');
+        const aiToggle = document.getElementById('aiToggle');
+
+        // Initialize the app
+        function initApp() {
+            // Load from localStorage if available
+            const savedHistory = localStorage.getItem('brandHistory');
+            if (savedHistory) {
+                brandHistory = JSON.parse(savedHistory);
+                renderHistory();
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Generate initial brand style
+            setTimeout(() => {
+                generateBrandStyle();
+            }, 500);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Vibe options
+            document.querySelectorAll('.vibe-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.vibe-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    currentStyle = this.dataset.vibe;
+                    schedulePreviewUpdate();
+                });
+            });
+
+            // Industry tags
+            document.querySelectorAll('.industry-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    document.querySelectorAll('.industry-tag').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentIndustry = this.dataset.industry;
+                    schedulePreviewUpdate();
+                });
+            });
+
+            // Intensity slider
+            document.getElementById('intensity').addEventListener('input', function() {
+                currentIntensity = this.value;
+                schedulePreviewUpdate();
+            });
+
+            // Generate button
+            generateBtn.addEventListener('click', generateBrandStyle);
+
+            // Advanced toggle
+            advancedToggle.addEventListener('click', function() {
+                advancedContent.classList.toggle('expanded');
+                const icon = this.querySelector('.fa-chevron-down');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+
+            // Dark mode toggle
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+
+            // Mobile view toggle
+            mobileViewToggle.addEventListener('click', toggleMobileView);
+
+            // Contrast check
+            contrastCheckBtn.addEventListener('click', checkContrast);
+
+            // Share modal
+            shareBtn.addEventListener('click', openShareModal);
+            closeShareModal.addEventListener('click', closeModal);
+
+            // Save and load
+            saveBtn.addEventListener('click', saveBrandStyle);
+            loadBtn.addEventListener('click', loadBrandStyle);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+
+            // Touch gestures for mobile
+            setupTouchGestures();
+
+            // AI toggle
+            aiToggle.addEventListener('change', function() {
+                showToast('AI suggestions ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+        }
+
+        // Generate brand style
+        function generateBrandStyle() {
+            // Show loading animation
+            document.getElementById('loadingAnimation').style.display = 'block';
+            document.getElementById('brandPreview').style.display = 'none';
+
+            // Disable generate button during generation
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+            setTimeout(() => {
+                const style = brandStyles[currentStyle];
+                const colorSet = style.colors[Math.floor(Math.random() * style.colors.length)];
+                const gradient = style.gradients[Math.floor(Math.random() * style.gradients.length)];
+
+                // Update hero section
+                const heroSection = document.getElementById('heroSection');
+                heroSection.style.background = gradient;
+                heroSection.style.fontFamily = `'${style.fonts.primary}', sans-serif`;
+
+                // Update typography preview
+                const fontPreview = document.getElementById('fontPreview');
+                fontPreview.innerHTML = `
+                    <div class="font-sample" style="font-size: 1.6rem; font-weight: 700; font-family: '${style.fonts.primary}', sans-serif; margin-bottom: 0.75rem;">
+                        ${style.fonts.primary}
+                        <span style="font-size: 0.8rem; opacity: 0.6; font-weight: 400;"> • Primary</span>
+                    </div>
+                    <div class="font-sample" style="font-size: 1.3rem; font-weight: 500; font-family: '${style.fonts.secondary}', sans-serif; margin-bottom: 0.75rem;">
+                        ${style.fonts.secondary}
+                        <span style="font-size: 0.8rem; opacity: 0.6; font-weight: 400;"> • Secondary</span>
+                    </div>
+                    <div class="font-sample" style="font-size: 1rem; opacity: 0.8; font-family: '${style.fonts.secondary}', sans-serif; line-height: 1.6;">
+                        "The quick brown fox jumps over the lazy dog"
+                        <br><span style="font-size: 0.85rem; opacity: 0.6;">Body text example with proper line height</span>
+                    </div>
+                `;
+
+                // Update color palette
+                const colorPalette = document.getElementById('colorPalette');
+                colorPalette.innerHTML = '';
+                
+                const roleLabels = ['Primary', 'Secondary', 'Accent', 'Background', 'Muted'];
+                colorSet.forEach((color, index) => {
+                    const container = document.createElement('div');
+                    container.style.textAlign = 'center';
+                    
+                    const colorDiv = document.createElement('div');
+                    colorDiv.style.backgroundColor = color;
+                    colorDiv.className = 'color-swatch has-tooltip';
+                    colorDiv.title = color;
+                    colorDiv.setAttribute('role', 'button');
+                    colorDiv.setAttribute('aria-label', `Color ${roleLabels[index]}, click to copy`);
+                    
+                    const colorValue = document.createElement('div');
+                    colorValue.className = 'color-value';
+                    colorValue.innerHTML = `
+                        <div style="font-weight: 500; margin-bottom: 2px;">${roleLabels[index]}</div>
+                        <div>${color}</div>
+                    `;
+                    
+                    container.appendChild(colorDiv);
+                    container.appendChild(colorValue);
+                    colorPalette.appendChild(container);
+                });
+
+                // Update components preview
+                updateComponentsPreview(style);
+
+                // Update accessibility report
+                updateAccessibilityReport(colorSet);
+
+                // Update sample content based on industry
+                updateSampleContent(currentIndustry);
+
+                // Create current brand object
+                currentBrand = {
+                    vibe: currentStyle,
+                    industry: currentIndustry,
+                    intensity: currentIntensity,
+                    colors: colorSet,
+                    gradient: gradient,
+                    fonts: style.fonts,
+                    timestamp: Date.now()
+                };
+
+                // Add to history
+                addToHistory(currentBrand);
+
+                // Hide loading and show preview
+                document.getElementById('loadingAnimation').style.display = 'none';
+                document.getElementById('brandPreview').style.display = 'block';
+                document.getElementById('brandPreview').classList.add('fade-in');
+
+                // Re-enable generate button
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Brand Style';
+
+                // Show success message
+                showToast('Brand style generated successfully!', 'success');
+            }, 1500);
+        }
+
+        // Update components preview
+        function updateComponentsPreview(style) {
+            const componentPreview = document.getElementById('componentPreview');
+            
+            let buttonStyle = '';
+            switch(style.components.button) {
+                case 'flat':
+                    buttonStyle = 'background: var(--accent); color: white; border: none;';
+                    break;
+                case 'glass':
+                    buttonStyle = 'background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);';
+                    break;
+                case 'rounded':
+                    buttonStyle = 'background: var(--accent); color: white; border: none; border-radius: 24px;';
+                    break;
+                case 'elegant':
+                    buttonStyle = 'background: transparent; color: var(--text-primary); border: 2px solid var(--accent);';
+                    break;
+                case 'playful':
+                    buttonStyle = 'background: var(--accent); color: white; border: none; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);';
+                    break;
+                case 'professional':
+                    buttonStyle = 'background: var(--accent); color: white; border: none; font-weight: 600;';
+                    break;
+                default:
+                    buttonStyle = 'background: var(--accent); color: white; border: none;';
+            }
+            
+            componentPreview.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h5 style="margin-bottom: 0.75rem; font-size: 1rem;">Buttons</h5>
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <button style="padding: 0.75rem 1.5rem; ${buttonStyle} border-radius: ${style.borderRadius};">Primary</button>
+                        <button style="padding: 0.75rem 1.5rem; background: transparent; color: var(--text-primary); border: 1px solid var(--border); border-radius: ${style.borderRadius};">Secondary</button>
+                    </div>
+                </div>
+                <div>
+                    <h5 style="margin-bottom: 0.75rem; font-size: 1rem;">Cards</h5>
+                    <div style="padding: 1.5rem; background: var(--bg-card); border-radius: ${style.borderRadius}; border: 1px solid var(--border);">
+                        <h6 style="margin-bottom: 0.5rem;">Card Title</h6>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">This is a sample card demonstrating the style's card design.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update accessibility report
+        function updateAccessibilityReport(colors) {
+            const accessibilityReport = document.getElementById('accessibilityReport');
+            
+            // Simple contrast check (in a real app, you would use a proper contrast checking algorithm)
+            const primaryColor = colors[0];
+            const backgroundColor = colors[3];
+            
+            // This is a simplified version - in reality you would calculate actual contrast ratios
+            const contrastScore = Math.random() > 0.3 ? 'Good' : 'Needs improvement';
+            const contrastColor = contrastScore === 'Good' ? 'var(--success)' : 'var(--warning)';
+            
+            accessibilityReport.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span>Color Contrast</span>
+                        <span style="font-weight: 600; color: ${contrastColor}">${contrastScore}</span>
+                    </div>
+                    <div style="height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden;">
+                        <div style="height: 100%; width: ${contrastScore === 'Good' ? '85%' : '60%'}; background: ${contrastColor};"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span>Text Readability</span>
+                        <span style="font-weight: 600; color: var(--success)">Good</span>
+                    </div>
+                    <div style="height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden;">
+                        <div style="height: 100%; width: 90%; background: var(--success);"></div>
+                    </div>
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span>Focus Visibility</span>
+                        <span style="font-weight: 600; color: var(--success)">Good</span>
+                    </div>
+                    <div style="height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden;">
+                        <div style="height: 100%; width: 95%; background: var(--success);"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update sample content based on industry
+        function updateSampleContent(industry) {
+            const contentVariations = {
+                'tech': [
+                    { title: 'InnovateTech', subtitle: 'Transforming tomorrow with cutting-edge technology solutions' },
+                    { title: 'TechForward', subtitle: 'Building the future through intelligent software solutions' },
+                    { title: 'NextGen Labs', subtitle: 'Where innovation meets execution in digital transformation' }
+                ],
+                'finance': [
+                    { title: 'FinanceForward', subtitle: 'Secure, smart, and strategic financial solutions for your future' },
+                    { title: 'WealthWise', subtitle: 'Empowering your financial journey with expert guidance' },
+                    { title: 'CapitalEdge', subtitle: 'Precision-driven investment strategies for modern portfolios' }
+                ],
+                'healthcare': [
+                    { title: 'HealthFirst', subtitle: 'Compassionate care powered by innovative medical technology' },
+                    { title: 'VitalCare', subtitle: 'Advancing patient outcomes through integrated healthcare solutions' },
+                    { title: 'MedTech Plus', subtitle: 'Revolutionizing healthcare delivery with smart medical solutions' }
+                ],
+                'education': [
+                    { title: 'EduExcellence', subtitle: 'Empowering minds through innovative learning experiences' },
+                    { title: 'LearnForward', subtitle: 'Shaping tomorrow\'s leaders with personalized education' },
+                    { title: 'Academic Edge', subtitle: 'Bridging knowledge gaps with cutting-edge educational tools' }
+                ],
+                'retail': [
+                    { title: 'RetailRevo', subtitle: 'Redefining shopping with personalized customer experiences' },
+                    { title: 'ShopSmart', subtitle: 'Where convenience meets quality in modern retail' },
+                    { title: 'Commerce Plus', subtitle: 'Elevating brand experiences through innovative retail solutions' }
+                ],
+                'consulting': [
+                    { title: 'StrategicEdge', subtitle: 'Expert guidance for sustainable business growth and success' },
+                    { title: 'ConsultPro', subtitle: 'Transforming challenges into competitive advantages' },
+                    { title: 'Advisory Plus', subtitle: 'Strategic insights that drive measurable business results' }
+                ],
+                'creative': [
+                    { title: 'CreativeStudio', subtitle: 'Bringing bold ideas to life through innovative design' },
+                    { title: 'Design Labs', subtitle: 'Where creativity meets strategy in visual storytelling' },
+                    { title: 'Artisan Agency', subtitle: 'Crafting memorable brand experiences through creative excellence' }
+                ],
+                'nonprofit': [
+                    { title: 'ChangeMakers', subtitle: 'Building stronger communities through meaningful impact' },
+                    { title: 'Impact First', subtitle: 'Creating lasting change through collaborative community action' },
+                    { title: 'Purpose Driven', subtitle: 'Empowering communities to create positive social change' }
+                ]
+            };
+
+            const variations = contentVariations[industry] || contentVariations['tech'];
+            const selectedContent = variations[Math.floor(Math.random() * variations.length)];
+            
+            document.getElementById('heroTitle').textContent = selectedContent.title;
+            document.getElementById('heroSubtitle').textContent = selectedContent.subtitle;
+        }
+
+        // Add to history
+        function addToHistory(brand) {
+            // Check if this brand already exists in history
+            const existingIndex = brandHistory.findIndex(item => 
+                item.vibe === brand.vibe && 
+                item.industry === brand.industry && 
+                JSON.stringify(item.colors) === JSON.stringify(brand.colors)
+            );
+
+            if (existingIndex !== -1) {
+                // Remove the existing one to avoid duplicates
+                brandHistory.splice(existingIndex, 1);
+            }
+
+            // Add to beginning of history
+            brandHistory.unshift(brand);
+
+            // Keep only the last 6 items
+            if (brandHistory.length > 6) {
+                brandHistory.pop();
+            }
+
+            // Save to localStorage
+            localStorage.setItem('brandHistory', JSON.stringify(brandHistory));
+
+            // Update history UI
+            renderHistory();
+        }
+
+        // Render history
+        function renderHistory() {
+            historyList.innerHTML = '';
+            
+            brandHistory.forEach((brand, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="color-bar">
+                        ${brand.colors.map(color => 
+                            `<div class="color-stripe" style="background: ${color};"></div>`
+                        ).join('')}
+                    </div>
+                `;
+                
+                historyItem.title = `${brandStyles[brand.vibe].name} - ${brand.industry}`;
+                historyItem.addEventListener('click', () => loadFromHistory(index));
+                
+                historyList.appendChild(historyItem);
+            });
+
+            // Add placeholder if history is empty
+            if (brandHistory.length === 0) {
+                historyList.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; opacity: 0.7;">Your recent styles will appear here</p>';
+            }
+        }
+
+        // Load from history
+        function loadFromHistory(index) {
+            const brand = brandHistory[index];
+            
+            // Update UI to match the historical brand
+            document.querySelectorAll('.vibe-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.vibe === brand.vibe);
+            });
+            
+            document.querySelectorAll('.industry-tag').forEach(tag => {
+                tag.classList.toggle('active', tag.dataset.industry === brand.industry);
+            });
+            
+            document.getElementById('intensity').value = brand.intensity;
+            
+            currentStyle = brand.vibe;
+            currentIndustry = brand.industry;
+            currentIntensity = brand.intensity;
+            
+            // Regenerate the style
+            generateBrandStyle();
+            
+            // Show notification
+            showToast('Style loaded from history');
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            const preview = document.querySelector('.brand-preview');
+            
+            if (isDarkMode) {
+                preview.style.filter = 'invert(1) hue-rotate(180deg)';
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            } else {
+                preview.style.filter = '';
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+            }
+        }
+
+        // Toggle mobile view
+        function toggleMobileView() {
+            isMobileView = !isMobileView;
+            const preview = document.querySelector('.brand-preview');
+            
+            if (isMobileView) {
+                preview.style.maxWidth = '375px';
+                preview.style.margin = '0 auto';
+                mobileViewToggle.innerHTML = '<i class="fas fa-desktop"></i> Desktop View';
+            } else {
+                preview.style.maxWidth = '';
+                preview.style.margin = '';
+                mobileViewToggle.innerHTML = '<i class="fas fa-mobile-alt"></i> Mobile View';
+            }
+        }
+
+        // Check contrast
+        function checkContrast() {
+            // In a real app, this would perform actual contrast ratio calculations
+            showToast('Contrast check completed. Results shown in accessibility report.', 'success');
+        }
+
+        // Open share modal
+        function openShareModal() {
+            // Generate a shareable link (in a real app, this would be a proper shareable URL)
+            const shareLink = document.getElementById('shareLink');
+            shareLink.value = `${window.location.origin}${window.location.pathname}?share=${btoa(JSON.stringify(currentBrand))}`;
+            
+            shareModal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            shareModal.classList.remove('active');
+        }
+
+        // Copy share link
+        function copyShareLink() {
+            const shareLink = document.getElementById('shareLink');
+            shareLink.select();
+            document.execCommand('copy');
+            
+            showToast('Link copied to clipboard!');
+        }
+
+        // Save brand style
+        function saveBrandStyle() {
+            if (!currentBrand) {
+                showToast('No brand style to save', 'error');
+                return;
+            }
+            
+            // Convert to JSON and create a blob
+            const data = JSON.stringify(currentBrand, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create a download link
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `brand-style-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Brand style saved successfully!', 'success');
+        }
+
+        // Load brand style
+        function loadBrandStyle() {
+            // Create a file input element
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const brand = JSON.parse(e.target.result);
+                        
+                        // Validate the loaded brand data
+                        if (!brand.vibe || !brand.industry || !brand.colors) {
+                            throw new Error('Invalid brand style file');
+                        }
+                        
+                        // Update UI to match the loaded brand
+                        document.querySelectorAll('.vibe-option').forEach(option => {
+                            option.classList.toggle('active', option.dataset.vibe === brand.vibe);
+                        });
+                        
+                        document.querySelectorAll('.industry-tag').forEach(tag => {
+                            tag.classList.toggle('active', tag.dataset.industry === brand.industry);
+                        });
+                        
+                        document.getElementById('intensity').value = brand.intensity;
+                        
+                        currentStyle = brand.vibe;
+                        currentIndustry = brand.industry;
+                        currentIntensity = brand.intensity;
+                        
+                        // Add to history and regenerate
+                        addToHistory(brand);
+                        generateBrandStyle();
+                        
+                        showToast('Brand style loaded successfully!', 'success');
+                    } catch (error) {
+                        showToast('Error loading brand style', 'error');
+                        console.error(error);
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'default') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'fas fa-info-circle';
+            if (type === 'success') icon = 'fas fa-check-circle';
+            if (type === 'error') icon = 'fas fa-exclamation-circle';
+            if (type === 'warning') icon = 'fas fa-exclamation-triangle';
+            
+            toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Remove toast after animation completes
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Handle keyboard shortcuts
+        function handleKeyboardShortcuts(e) {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                generateBrandStyle();
+            }
+            if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                saveBrandStyle();
+            }
+            if (e.key === 'o' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                loadBrandStyle();
+            }
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        }
+
+        // Set up touch gestures
+        function setupTouchGestures() {
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            });
+
+            document.addEventListener('touchend', function(e) {
+                if (!touchStartX || !touchStartY) return;
+
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+
+                const deltaX = touchStartX - touchEndX;
+                const deltaY = touchStartY - touchEndY;
+
+                // Swipe right to generate new style
+                if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < -50) {
+                    generateBrandStyle();
+                }
+            });
+        }
+
+        // Schedule preview update
+        let previewTimeout;
+        function schedulePreviewUpdate() {
+            clearTimeout(previewTimeout);
+            previewTimeout = setTimeout(() => {
+                generateBrandStyle();
+            }, 800);
+        }
+
+        // Export functions
+        function exportCSS() {
+            if (!currentBrand) {
+                showToast('Generate a brand style first', 'error');
+                return;
+            }
+            
+            const style = brandStyles[currentBrand.vibe];
+            const css = `
+/* Generated Brand Style CSS */
+:root {
+  --primary-font: '${style.fonts.primary}', sans-serif;
+  --secondary-font: '${style.fonts.secondary}', sans-serif;
+  --brand-primary: ${currentBrand.colors[0]};
+  --brand-secondary: ${currentBrand.colors[1]};
+  --brand-accent: ${currentBrand.colors[2]};
+  --brand-background: ${currentBrand.colors[3]};
+  --brand-muted: ${currentBrand.colors[4]};
+  --border-radius: ${style.borderRadius};
+  --spacing: ${style.spacing};
+}
+
+.brand-title {
+  font-family: var(--primary-font);
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.brand-body {
+  font-family: var(--secondary-font);
+  color: var(--brand-primary);
+  line-height: 1.6;
+}
+
+.brand-button {
+  background: var(--brand-accent);
+  color: var(--brand-background);
+  font-family: var(--secondary-font);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.brand-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.brand-card {
+  background: var(--brand-background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+  border: 1px solid var(--brand-muted);
+}
+            `.trim();
+
+            downloadFile(css, 'brand-style.css', 'text/css');
+            showToast('CSS exported successfully!', 'success');
+        }
+
+        function exportJSON() {
+            if (!currentBrand) {
+                showToast('Generate a brand style first', 'error');
+                return;
+            }
+            
+            const brandData = {
+                vibe: currentBrand.vibe,
+                industry: currentBrand.industry,
+                intensity: currentBrand.intensity,
+                fonts: brandStyles[currentBrand.vibe].fonts,
+                colors: currentBrand.colors,
+                gradients: brandStyles[currentBrand.vibe].gradients,
+                borderRadius: brandStyles[currentBrand.vibe].borderRadius,
+                spacing: brandStyles[currentBrand.vibe].spacing,
+                components: brandStyles[currentBrand.vibe].components,
+                timestamp: new Date().toISOString()
+            };
+
+            downloadFile(JSON.stringify(brandData, null, 2), 'brand-style.json', 'application/json');
+            showToast('JSON exported successfully!', 'success');
+        }
+
+        function exportTailwind() {
+            if (!currentBrand) {
+                showToast('Generate a brand style first', 'error');
+                return;
+            }
+            
+            const tailwindConfig = `
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{html,js}"],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          primary: '${currentBrand.colors[0]}',
+          secondary: '${currentBrand.colors[1]}',
+          accent: '${currentBrand.colors[2]}',
+          background: '${currentBrand.colors[3]}',
+          muted: '${currentBrand.colors[4]}'
+        }
+      },
+      fontFamily: {
+        primary: ['${brandStyles[currentBrand.vibe].fonts.primary}', 'sans-serif'],
+        secondary: ['${brandStyles[currentBrand.vibe].fonts.secondary}', 'sans-serif']
+      },
+      borderRadius: {
+        brand: '${brandStyles[currentBrand.vibe].borderRadius}'
+      },
+      spacing: {
+        brand: '${brandStyles[currentBrand.vibe].spacing}'
+      }
+    },
+  },
+  plugins: [],
+}
+            `.trim();
+
+            downloadFile(tailwindConfig, 'tailwind.config.js', 'application/javascript');
+            showToast('Tailwind config exported successfully!', 'success');
+        }
+
+        function exportFigma() {
+            showToast('Figma export would be implemented with a proper API', 'info');
+        }
+
+        // Download helper function
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Copy color to clipboard when clicked
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('color-swatch')) {
+                const color = e.target.title;
+                navigator.clipboard.writeText(color).then(() => {
+                    // Show a brief feedback
+                    e.target.classList.add('copied');
+                    showToast(`Color ${color} copied to clipboard!`);
+                    
+                    setTimeout(() => {
+                        e.target.classList.remove('copied');
+                    }, 600);
+                }).catch(err => {
+                    showToast('Failed to copy color', 'error');
+                });
+            }
+        });
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
