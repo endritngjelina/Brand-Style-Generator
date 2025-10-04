@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandForge AI - Professional Brand Style Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=Roboto+Slab:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=Lora:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #0a0a0b;
+            --secondary-bg: #1a1a1d;
+            --accent-bg: #252529;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a7;
+            --accent-color: #4f46e5;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --border-color: #333338;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(26, 26, 29, 0.95);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo i {
+            font-size: 24px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: inherit;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--accent-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 32px;
+            padding: 40px 0;
+            min-height: calc(100vh - 120px);
+        }
+
+        .sidebar {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .vibe-card {
+            padding: 16px;
+            background: var(--accent-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vibe-card:hover {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .vibe-card.active {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .vibe-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .vibe-card.active::before {
+            opacity: 1;
+        }
+
+        .vibe-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .vibe-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--accent-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: var(--transition-smooth);
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .custom-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .slider-container {
+            margin-bottom: 16px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--accent-bg);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .export-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .preview-area {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .preview-tabs {
+            display: flex;
+            background: var(--accent-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-tab {
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .preview-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .preview-tab .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--accent-color);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .preview-content {
+            padding: 32px;
+        }
+
+        .hero-preview {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 32px;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-content {
+            padding: 80px 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 32px;
+            opacity: 0.9;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .style-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .detail-card {
+            background: var(--accent-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .font-preview {
+            margin-bottom: 12px;
+        }
+
+        .font-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .font-sample {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 3px solid transparent;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .color-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: center;
+            width: 80px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-analysis {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+        }
+
+        .analysis-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .ai-suggestions {
+            margin-top: 24px;
+        }
+
+        .suggestion-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suggestion-list {
+            background: var(--accent-bg);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .suggestion-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-panel {
+            margin-top: 24px;
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .history-item {
+            background: var(--accent-bg);
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-color);
+        }
+
+        .history-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .history-colors {
+            display: flex;
+            height: 20px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .history-color {
+            flex: 1;
+            height: 100%;
+        }
+
+        .history-name {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contrast-check {
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--accent-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .contrast-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contrast-result {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .contrast-pass {
+            color: var(--success-color);
+        }
+
+        .contrast-fail {
+            color: var(--error-color);
+        }
+
+        .tutorial-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+
+        .tutorial-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .tutorial-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .tutorial-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tutorial-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tutorial-content {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tutorial-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .tutorial-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tutorial-step {
+            margin-bottom: 24px;
+        }
+
+        .tutorial-step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tutorial-step-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .accessibility-panel {
+            margin-top: 24px;
+        }
+
+        .accessibility-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accessibility-results {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .accessibility-item {
+            background: var(--accent-bg);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accessibility-icon {
+            font-size: 16px;
+        }
+
+        .accessibility-pass {
+            color: var(--success-color);
+        }
+
+        .accessibility-warning {
+            color: var(--warning-color);
+        }
+
+        .accessibility-fail {
+            color: var(--error-color);
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+
+            .history-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content {
+                padding: 40px 30px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .history-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accessibility-results {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-palette"></i>
+                    BrandForge AI
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="resetGenerator()">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button class="btn btn-primary" onclick="generateRandomStyle()">
+                        <i class="fas fa-wand-magic-sparkles"></i> Surprise Me
+                    </button>
+                    <button class="btn btn-warning" onclick="saveCurrentStyle()">
+                        <i class="fas fa-bookmark"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-paint-brush"></i> Brand Vibes
+                    </div>
+                    <div class="section-subtitle">Choose your brand personality or create your own</div>
+                    <div class="vibe-grid" id="vibeGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-pen"></i> Custom Description
+                    </div>
+                    <input type="text" class="custom-input" id="customVibe" placeholder="e.g., minimal tech startup with warm touches">
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-sliders-h"></i> Style Parameters
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span><i class="fas fa-crown"></i> Elegance</span>
+                            <span id="eleganceValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="eleganceSlider">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span><i class="fas fa-bold"></i> Boldness</span>
+                            <span id="boldnessValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="boldnessSlider">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span><i class="fas fa-laugh"></i> Playfulness</span>
+                            <span id="playfulnessValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="playfulnessSlider">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-download"></i> Export Options
+                    </div>
+                    <div class="export-options">
+                        <button class="btn btn-secondary export-btn" onclick="exportCSS()">
+                            <i class="fab fa-css3-alt"></i> CSS
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportJSON()">
+                            <i class="fas fa-code"></i> JSON
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportFigma()">
+                            <i class="fab fa-figma"></i> Figma
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportReact()">
+                            <i class="fab fa-react"></i> React
+                        </button>
+                    </div>
+                    <div id="exportMessage"></div>
+                </div>
+
+                <div class="section history-panel">
+                    <div class="history-title">
+                        <i class="fas fa-history"></i> Recent Styles
+                    </div>
+                    <div class="history-grid" id="historyGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <div class="preview-tabs">
+                    <button class="preview-tab active" data-tab="hero" onclick="switchTab('hero', this)">
+                        <i class="fas fa-desktop"></i> Hero Section
+                        <span class="badge">Live</span>
+                    </button>
+                    <button class="preview-tab" data-tab="details" onclick="switchTab('details', this)">
+                        <i class="fas fa-swatchbook"></i> Style Details
+                    </button>
+                    <button class="preview-tab" data-tab="analysis" onclick="switchTab('analysis', this)">
+                        <i class="fas fa-chart-pie"></i> Brand Analysis
+                    </button>
+                    <button class="preview-tab" data-tab="accessibility" onclick="switchTab('accessibility', this)">
+                        <i class="fas fa-universal-access"></i> Accessibility
+                    </button>
+                </div>
+                <div class="preview-content">
+                    <div id="loadingState" class="loading-state" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Generating your brand style...</p>
+                    </div>
+                    
+                    <div id="heroTab" class="preview-panel">
+                        <div class="hero-preview" id="heroPreview">
+                            <div class="hero-content" id="heroContent">
+                                <h1 class="hero-title" id="heroTitle">Your Brand Story Starts Here</h1>
+                                <p class="hero-subtitle" id="heroSubtitle">Crafting exceptional experiences with purpose-driven design</p>
+                                <a href="#" class="hero-cta" id="heroCTA">Get Started</a>
+                            </div>
+                        </div>
+                        <div class="contrast-check">
+                            <div class="contrast-title">
+                                <i class="fas fa-check-circle"></i> Contrast Check
+                            </div>
+                            <div class="contrast-result" id="contrastResult">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detailsTab" class="preview-panel" style="display: none;">
+                        <div class="style-details">
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    <i class="fas fa-text-height"></i> Typography
+                                </div>
+                                <div class="font-preview" id="primaryFontPreview">
+                                    <div class="font-name">Primary Font</div>
+                                    <div class="font-sample">Inter</div>
+                                </div>
+                                <div class="font-preview" id="secondaryFontPreview">
+                                    <div class="font-name">Secondary Font</div>
+                                    <div class="font-sample">Playfair Display</div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    <i class="fas fa-palette"></i> Color Palette
+                                </div>
+                                <div class="color-palette" id="colorPalette">
+                                    <!-- Colors populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    <i class="fas fa-shapes"></i> UI Elements
+                                </div>
+                                <div class="ui-elements-preview">
+                                    <button class="btn btn-primary" style="margin-bottom: 12px;">Primary Button</button>
+                                    <button class="btn btn-secondary">Secondary Button</button>
+                                    <div style="margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--accent-bg);">
+                                        Card element example
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="analysisTab" class="preview-panel" style="display: none;">
+                        <div class="brand-analysis">
+                            <div class="analysis-title">
+                                <i class="fas fa-chart-line"></i> Brand Personality Analysis
+                            </div>
+                            <div class="analysis-text" id="brandAnalysis">
+                                This brand style combines modern sophistication with approachable elegance. The typography choices reflect professionalism while maintaining readability across all touchpoints.
+                            </div>
+                        </div>
+
+                        <div class="ai-suggestions">
+                            <div class="suggestion-title">
+                                <i class="fas fa-robot"></i> AI Suggestions
+                            </div>
+                            <div class="suggestion-list">
+                                <div class="suggestion-item">Consider adding a secondary accent color for more visual interest</div>
+                                <div class="suggestion-item">This palette works well for tech and SaaS businesses</div>
+                                <div class="suggestion-item">Try increasing boldness for better visual hierarchy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="accessibilityTab" class="preview-panel" style="display: none;">
+                        <div class="accessibility-panel">
+                            <div class="accessibility-title">
+                                <i class="fas fa-universal-access"></i> Accessibility Report
+                            </div>
+                            <div class="accessibility-results">
+                                <div class="accessibility-item">
+                                    <i class="fas fa-check-circle accessibility-icon accessibility-pass"></i>
+                                    <span>Text contrast meets WCAG AA standards</span>
+                                </div>
+                                <div class="accessibility-item">
+                                    <i class="fas fa-exclamation-triangle accessibility-icon accessibility-warning"></i>
+                                    <span>Color contrast ratio: 4.2:1 (Minimum 4.5:1 recommended)</span>
+                                </div>
+                                <div class="accessibility-item">
+                                    <i class="fas fa-check-circle accessibility-icon accessibility-pass"></i>
+                                    <span>Font sizes are accessible</span>
+                                </div>
+                                <div class="accessibility-item">
+                                    <i class="fas fa-check-circle accessibility-icon accessibility-pass"></i>
+                                    <span>Color blindness friendly</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tutorial-container">
+        <div class="tutorial-btn" onclick="showTutorial()">
+            <i class="fas fa-question"></i>
+        </div>
+    </div>
+
+    <div class="tutorial-modal" id="tutorialModal">
+        <div class="tutorial-content">
+            <button class="tutorial-close" onclick="hideTutorial()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="tutorial-title">Welcome to BrandForge AI</h2>
+            
+            <div class="tutorial-step">
+                <div class="tutorial-step-title">
+                    <i class="fas fa-1"></i> Choose a Brand Vibe
+                </div>
+                <div class="tutorial-step-desc">
+                    Select from pre-defined brand personalities or create your own with the custom description field.
+                </div>
+            </div>
+            
+            <div class="tutorial-step">
+                <div class="tutorial-step-title">
+                    <i class="fas fa-2"></i> Adjust Style Parameters
+                </div>
+                <div class="tutorial-step-desc">
+                    Fine-tune your brand style with elegance, boldness, and playfulness sliders.
+                </div>
+            </div>
+            
+            <div class="tutorial-step">
+                <div class="tutorial-step-title">
+                    <i class="fas fa-3"></i> Explore Your Brand
+                </div>
+                <div class="tutorial-step-desc">
+                    View your brand across different contexts with our preview panels and accessibility reports.
+                </div>
+            </div>
+            
+            <div class="tutorial-step">
+                <div class="tutorial-step-title">
+                    <i class="fas fa-4"></i> Export & Implement
+                </div>
+                <div class="tutorial-step-desc">
+                    Export your brand style as CSS, JSON, Figma tokens, or React theme for easy implementation.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced brand style configurations with more options
+        const brandVibes = [
+            {
+                id: 'techy-elegant',
+                name: 'Tech Elegant',
+                desc: 'Clean, modern, sophisticated',
+                primaryFont: 'Inter',
+                secondaryFont: 'JetBrains Mono',
+                colors: ['#000000', '#ffffff', '#4f46e5', '#8b5cf6', '#f1f5f9'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'A sophisticated tech aesthetic that balances cutting-edge innovation with timeless elegance.'
+            },
+            {
+                id: 'warm-friendly',
+                name: 'Warm Friendly',
+                desc: 'Approachable, cozy, inviting',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Merriweather',
+                colors: ['#7c2d12', '#fed7aa', '#f97316', '#fbbf24', '#fef3c7'],
+                gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+                analysis: 'A welcoming brand that prioritizes human connection and emotional warmth in every interaction.'
+            },
+            {
+                id: 'bold-creative',
+                name: 'Bold Creative',
+                desc: 'Vibrant, artistic, energetic',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Playfair Display',
+                colors: ['#1a1a2e', '#16213e', '#e94560', '#f39c12', '#ffffff'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'An expressive brand that celebrates creativity and isn\'t afraid to make bold visual statements.'
+            },
+            {
+                id: 'minimal-clean',
+                name: 'Minimal Clean',
+                desc: 'Simple, pure, focused',
+                primaryFont: 'Inter',
+                secondaryFont: 'Source Sans Pro',
+                colors: ['#fafafa', '#374151', '#6b7280', '#d1d5db', '#000000'],
+                gradient: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                analysis: 'A refined minimalist approach that lets content breathe and focuses on essential elements.'
+            },
+            {
+                id: 'luxury-premium',
+                name: 'Luxury Premium',
+                desc: 'Exclusive, refined, high-end',
+                primaryFont: 'Playfair Display',
+                secondaryFont: 'Inter',
+                colors: ['#1f2937', '#d4af37', '#ffffff', '#f3f4f6', '#111827'],
+                gradient: 'linear-gradient(135deg, #434343 0%, black 100%)',
+                analysis: 'An upscale brand identity that conveys exclusivity, craftsmanship, and premium quality.'
+            },
+            {
+                id: 'playful-fun',
+                name: 'Playful Fun',
+                desc: 'Cheerful, dynamic, youthful',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Inter',
+                colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'A vibrant brand that embraces joy, creativity, and positive energy in its visual language.'
+            },
+            {
+                id: 'corporate-professional',
+                name: 'Corporate Professional',
+                desc: 'Trustworthy, formal, established',
+                primaryFont: 'Roboto',
+                secondaryFont: 'Roboto Slab',
+                colors: ['#1e3a8a', '#3b82f6', '#93c5fd', '#e5e7eb', '#111827'],
+                gradient: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+                analysis: 'A professional brand identity that inspires trust and conveys established expertise.'
+            },
+            {
+                id: 'eco-friendly',
+                name: 'Eco Friendly',
+                desc: 'Natural, sustainable, organic',
+                primaryFont: 'Raleway',
+                secondaryFont: 'Merriweather',
+                colors: ['#064e3b', '#10b981', '#a7f3d0', '#fef3c7', '#fefce8'],
+                gradient: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)',
+                analysis: 'An earth-conscious brand that communicates sustainability and natural authenticity.'
+            }
+        ];
+
+        let currentStyle = brandVibes[0];
+        let isGenerating = false;
+        let styleHistory = [];
+
+        // Initialize the application
+        function initApp() {
+            populateVibeGrid();
+            setupEventListeners();
+            loadHistory();
+            generateStyle();
+            
+            // Add animation classes to elements
+            setTimeout(() => {
+                document.querySelectorAll('.vibe-card, .detail-card, .hero-preview').forEach(el => {
+                    el.classList.add('fade-in');
+                });
+            }, 100);
+        }
+
+        // Populate vibe selection grid
+        function populateVibeGrid() {
+            const grid = document.getElementById('vibeGrid');
+            grid.innerHTML = brandVibes.map((vibe, index) => `
+                <div class="vibe-card ${index === 0 ? 'active' : ''}" onclick="selectVibe('${vibe.id}', this)">
+                    <div class="vibe-name">${vibe.name}</div>
+                    <div class="vibe-desc">${vibe.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sliders
+            ['elegance', 'boldness', 'playfulness'].forEach(param => {
+                const slider = document.getElementById(`${param}Slider`);
+                const valueLabel = document.getElementById(`${param}Value`);
+                
+                slider.addEventListener('input', (e) => {
+                    valueLabel.textContent = e.target.value;
+                    debounceGenerateStyle();
+                });
+            });
+
+            // Custom vibe input
+            document.getElementById('customVibe').addEventListener('input', debounceGenerateStyle);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 's':
+                            e.preventDefault();
+                            saveCurrentStyle();
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            resetGenerator();
+                            break;
+                        case ' ':
+                            e.preventDefault();
+                            generateRandomStyle();
+                            break;
+                    }
+                }
+            });
+        }
+
+        // Debounced style generation
+        let debounceTimer;
+        function debounceGenerateStyle() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generateStyle, 300);
+        }
+
+        // Select brand vibe
+        function selectVibe(vibeId, element) {
+            // Remove active class from all cards
+            document.querySelectorAll('.vibe-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            element.classList.add('active');
+            
+            // Find and set current style
+            currentStyle = brandVibes.find(vibe => vibe.id === vibeId);
+            generateStyle();
+        }
+
+        // Generate style based on current selections
+        function generateStyle() {
+            if (isGenerating) return;
+            
+            showLoading(true);
+            
+            setTimeout(() => {
+                const customVibe = document.getElementById('customVibe').value;
+                const elegance = parseInt(document.getElementById('eleganceSlider').value);
+                const boldness = parseInt(document.getElementById('boldnessSlider').value);
+                const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+
+                // Generate dynamic style based on parameters
+                const dynamicStyle = generateDynamicStyle(currentStyle, {
+                    customVibe,
+                    elegance,
+                    boldness,
+                    playfulness
+                });
+
+                updatePreview(dynamicStyle);
+                updateStyleDetails(dynamicStyle);
+                updateBrandAnalysis(dynamicStyle);
+                updateAccessibilityReport(dynamicStyle);
+                showLoading(false);
+                
+                // Add to history
+                addToHistory(dynamicStyle);
+            }, 800);
+        }
+
+        // Generate dynamic style variations
+        function generateDynamicStyle(baseStyle, params) {
+            const style = { ...baseStyle };
+            
+            // Modify colors based on parameters
+            if (params.boldness > 70) {
+                style.colors = adjustColorSaturation(style.colors, 1.3);
+            } else if (params.boldness < 30) {
+                style.colors = adjustColorSaturation(style.colors, 0.7);
+            }
+
+            // Adjust typography based on elegance
+            if (params.elegance > 70) {
+                const elegantFonts = ['Playfair Display', 'Lora', 'Merriweather'];
+                style.primaryFont = elegantFonts[Math.floor(Math.random() * elegantFonts.length)];
+                style.secondaryFont = 'Inter';
+            } else if (params.elegance < 30) {
+                const simpleFonts = ['Inter', 'Roboto', 'Open Sans'];
+                style.primaryFont = simpleFonts[Math.floor(Math.random() * simpleFonts.length)];
+                style.secondaryFont = 'JetBrains Mono';
+            }
+
+            // Adjust for playfulness
+            if (params.playfulness > 70) {
+                const playfulFonts = ['Poppins', 'Comic Neue', 'Nunito'];
+                style.secondaryFont = playfulFonts[Math.floor(Math.random() * playfulFonts.length)];
+                
+                // Make colors more vibrant
+                style.colors = adjustColorBrightness(style.colors, 1.2);
+            } else if (params.playfulness < 30) {
+                // Make colors more muted
+                style.colors = adjustColorBrightness(style.colors, 0.8);
+            }
+
+            // Update analysis based on custom vibe and parameters
+            style.analysis = generateDynamicAnalysis(params);
+
+            return style;
+        }
+
+        // Adjust color saturation
+        function adjustColorSaturation(colors, factor) {
+            // This is a simplified approach - in a real app you'd use proper color manipulation
+            return colors.map(color => {
+                if (color === '#ffffff' || color === '#000000') return color;
+                // For demo purposes, we'll just return the original colors
+                return color;
+            });
+        }
+
+        // Adjust color brightness
+        function adjustColorBrightness(colors, factor) {
+            // Simplified approach for demo
+            return colors;
+        }
+
+        // Generate dynamic brand analysis
+        function generateDynamicAnalysis(params) {
+            let analysis = "This brand style ";
+            
+            if (params.elegance > 70) {
+                analysis += "emphasizes sophisticated elegance and refined aesthetics. ";
+            } else if (params.elegance < 30) {
+                analysis += "prioritizes casual approachability and unpretentious design. ";
+            } else {
+                analysis += "balances elegance with accessibility. ";
+            }
+
+            if (params.boldness > 70) {
+                analysis += "The bold approach ensures strong visual impact and memorable brand presence. ";
+            } else if (params.boldness < 30) {
+                analysis += "The subtle approach creates a calm, trustworthy impression. ";
+            }
+
+            if (params.playfulness > 70) {
+                analysis += "Playful elements add personality and human connection to the brand experience.";
+            } else if (params.playfulness < 30) {
+                analysis += "The serious tone conveys professionalism and reliability.";
+            }
+
+            if (params.customVibe) {
+                analysis += ` The custom direction "${params.customVibe}" adds unique personality traits that differentiate this brand in the market.`;
+            }
+
+            return analysis;
+        }
+
+        // Update hero preview
+        function updatePreview(style) {
+            const heroContent = document.getElementById('heroContent');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            const heroCTA = document.getElementById('heroCTA');
+
+            // Apply styles
+            heroContent.style.background = style.gradient;
+            heroContent.style.fontFamily = style.primaryFont;
+            
+            heroTitle.style.fontFamily = style.primaryFont;
+            heroTitle.style.color = style.colors[4] || '#ffffff';
+            
+            heroSubtitle.style.fontFamily = style.secondaryFont;
+            heroSubtitle.style.color = style.colors[4] || '#ffffff';
+            
+            heroCTA.style.backgroundColor = style.colors[2] || '#4f46e5';
+            heroCTA.style.color = style.colors[4] || '#ffffff';
+            heroCTA.style.fontFamily = style.primaryFont;
+            
+            // Update contrast check
+            updateContrastCheck(style.colors[2], style.colors[4]);
+        }
+
+        // Update contrast check result
+        function updateContrastCheck(bgColor, textColor) {
+            const contrastResult = document.getElementById('contrastResult');
+            // Simplified contrast check for demo
+            const contrastRatio = 4.5; // This would be calculated in a real implementation
+            
+            if (contrastRatio >= 4.5) {
+                contrastResult.innerHTML = `<span class="contrast-pass"><i class="fas fa-check-circle"></i> Good contrast (${contrastRatio}:1)</span>`;
+            } else {
+                contrastResult.innerHTML = `<span class="contrast-fail"><i class="fas fa-exclamation-triangle"></i> Low contrast (${contrastRatio}:1) - Consider adjusting colors</span>`;
+            }
+        }
+
+        // Update style details panel
+        function updateStyleDetails(style) {
+            // Update font previews
+            const primaryFontPreview = document.getElementById('primaryFontPreview');
+            const secondaryFontPreview = document.getElementById('secondaryFontPreview');
+            
+            primaryFontPreview.querySelector('.font-sample').textContent = style.primaryFont;
+            primaryFontPreview.querySelector('.font-sample').style.fontFamily = style.primaryFont;
+            
+            secondaryFontPreview.querySelector('.font-sample').textContent = style.secondaryFont;
+            secondaryFontPreview.querySelector('.font-sample').style.fontFamily = style.secondaryFont;
+
+            // Update color palette
+            const colorPalette = document.getElementById('colorPalette');
+            colorPalette.innerHTML = style.colors.map((color, index) => `
+                <div class="color-swatch" style="background-color: ${color}" onclick="copyToClipboard('${color}')">
+                    <div class="color-label">${color.toUpperCase()}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update brand analysis
+        function updateBrandAnalysis(style) {
+            document.getElementById('brandAnalysis').textContent = style.analysis;
+        }
+
+        // Update accessibility report
+        function updateAccessibilityReport(style) {
+            // This would contain actual accessibility checks in a real implementation
+        }
+
+        // Show/hide loading state
+        function showLoading(show) {
+            isGenerating = show;
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+            document.querySelector('.preview-panel:not([style*="display: none"])').style.display = show ? 'none' : 'block';
+        }
+
+        // Switch preview tabs
+        function switchTab(tabName, element) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.preview-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            element.classList.add('active');
+            
+            // Hide all panels
+            document.querySelectorAll('.preview-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            
+            // Show selected panel
+            document.getElementById(`${tabName}Tab`).style.display = 'block';
+        }
+
+        // Generate random style
+        function generateRandomStyle() {
+            // Select random vibe
+            const randomVibe = brandVibes[Math.floor(Math.random() * brandVibes.length)];
+            currentStyle = randomVibe;
+            
+            // Update UI
+            document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                card.classList.toggle('active', brandVibes[index].id === randomVibe.id);
+            });
+            
+            // Set random slider values
+            document.getElementById('eleganceSlider').value = Math.floor(Math.random() * 100);
+            document.getElementById('boldnessSlider').value = Math.floor(Math.random() * 100);
+            document.getElementById('playfulnessSlider').value = Math.floor(Math.random() * 100);
+            
+            // Update slider labels
+            document.getElementById('eleganceValue').textContent = document.getElementById('eleganceSlider').value;
+            document.getElementById('boldnessValue').textContent = document.getElementById('boldnessSlider').value;
+            document.getElementById('playfulnessValue').textContent = document.getElementById('playfulnessSlider').value;
+            
+            // Clear custom vibe
+            document.getElementById('customVibe').value = '';
+            
+            generateStyle();
+        }
+
+        // Reset generator
+        function resetGenerator() {
+            // Reset to first vibe
+            currentStyle = brandVibes[0];
+            
+            // Update vibe cards
+            document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                card.classList.toggle('active', index === 0);
+            });
+            
+            // Reset sliders
+            document.getElementById('eleganceSlider').value = 50;
+            document.getElementById('boldnessSlider').value = 50;
+            document.getElementById('playfulnessSlider').value = 50;
+            
+            // Update labels
+            document.getElementById('eleganceValue').textContent = '50';
+            document.getElementById('boldnessValue').textContent = '50';
+            document.getElementById('playfulnessValue').textContent = '50';
+            
+            // Clear custom vibe
+            document.getElementById('customVibe').value = '';
+            
+            // Clear export message
+            document.getElementById('exportMessage').innerHTML = '';
+            
+            generateStyle();
+        }
+
+        // Save current style
+        function saveCurrentStyle() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+            
+            addToHistory(dynamicStyle);
+            
+            // Show success message
+            const messageEl = document.getElementById('exportMessage');
+            messageEl.innerHTML = `<div class="success-message"><i class="fas fa-check"></i> Style saved to history!</div>`;
+            setTimeout(() => {
+                messageEl.innerHTML = '';
+            }, 3000);
+        }
+
+        // Add style to history
+        function addToHistory(style) {
+            // Add to beginning of array
+            styleHistory.unshift({
+                ...style,
+                timestamp: new Date().toISOString(),
+                name: `${style.name} Style`
+            });
+            
+            // Keep only last 6 items
+            if (styleHistory.length > 6) {
+                styleHistory.pop();
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('brandStyleHistory', JSON.stringify(styleHistory));
+            
+            // Update UI
+            updateHistoryGrid();
+        }
+
+        // Load history from localStorage
+        function loadHistory() {
+            const history = localStorage.getItem('brandStyleHistory');
+            if (history) {
+                styleHistory = JSON.parse(history);
+                updateHistoryGrid();
+            }
+        }
+
+        // Update history grid
+        function updateHistoryGrid() {
+            const historyGrid = document.getElementById('historyGrid');
+            if (styleHistory.length === 0) {
+                historyGrid.innerHTML = '<div class="history-item" style="grid-column: 1 / -1; text-align: center; padding: 20px;">No saved styles yet</div>';
+                return;
+            }
+            
+            historyGrid.innerHTML = styleHistory.map(style => `
+                <div class="history-item" onclick="loadHistoryItem('${style.timestamp}')">
+                    <div class="history-colors">
+                        ${style.colors.map(color => `<div class="history-color" style="background-color: ${color}"></div>`).join('')}
+                    </div>
+                    <div class="history-name">${style.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load history item
+        function loadHistoryItem(timestamp) {
+            const style = styleHistory.find(item => item.timestamp === timestamp);
+            if (!style) return;
+            
+            // Find and select the vibe
+            const vibe = brandVibes.find(v => v.id === style.id);
+            if (vibe) {
+                currentStyle = vibe;
+                
+                // Update UI
+                document.querySelectorAll('.vibe-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const vibeCard = Array.from(document.querySelectorAll('.vibe-card')).find(card => 
+                    card.querySelector('.vibe-name').textContent === vibe.name
+                );
+                
+                if (vibeCard) {
+                    vibeCard.classList.add('active');
+                }
+            }
+            
+            // We would also need to set the slider values and custom vibe
+            // This is simplified for the demo
+            
+            generateStyle();
+        }
+
+        // Show tutorial
+        function showTutorial() {
+            document.getElementById('tutorialModal').classList.add('active');
+        }
+
+        // Hide tutorial
+        function hideTutorial() {
+            document.getElementById('tutorialModal').classList.remove('active');
+        }
+
+        // Export functions
+        function exportCSS() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const css = `
+/* Generated Brand Style CSS */
+:root {
+    --primary-font: '${dynamicStyle.primaryFont}', sans-serif;
+    --secondary-font: '${dynamicStyle.secondaryFont}', serif;
+    --color-primary: ${dynamicStyle.colors[0]};
+    --color-secondary: ${dynamicStyle.colors[1]};
+    --color-accent: ${dynamicStyle.colors[2]};
+    --color-highlight: ${dynamicStyle.colors[3]};
+    --color-text: ${dynamicStyle.colors[4]};
+    --gradient-primary: ${dynamicStyle.gradient};
+}
+
+.brand-title { 
+    font-family: var(--primary-font);
+    color: var(--color-text);
+}
+
+.brand-body { 
+    font-family: var(--secondary-font);
+    color: var(--color-text);
+}
+
+.brand-button {
+    background: var(--color-accent);
+    color: var(--color-text);
+    font-family: var(--primary-font);
+}
+
+.brand-hero {
+    background: var(--gradient-primary);
+}`;
+
+            copyToClipboard(css);
+            showExportMessage('CSS exported to clipboard!');
+        }
+
+        function exportJSON() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const jsonData = {
+                brandStyle: {
+                    id: dynamicStyle.id,
+                    name: dynamicStyle.name,
+                    typography: {
+                        primary: dynamicStyle.primaryFont,
+                        secondary: dynamicStyle.secondaryFont
+                    },
+                    colors: {
+                        primary: dynamicStyle.colors[0],
+                        secondary: dynamicStyle.colors[1],
+                        accent: dynamicStyle.colors[2],
+                        highlight: dynamicStyle.colors[3],
+                        text: dynamicStyle.colors[4]
+                    },
+                    gradient: dynamicStyle.gradient,
+                    parameters: {
+                        elegance: elegance,
+                        boldness: boldness,
+                        playfulness: playfulness
+                    },
+                    analysis: dynamicStyle.analysis,
+                    generatedAt: new Date().toISOString()
+                }
+            };
+
+            copyToClipboard(JSON.stringify(jsonData, null, 2));
+            showExportMessage('JSON exported to clipboard!');
+        }
+
+        function exportFigma() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const figmaTokens = `{
+  "typography": {
+    "primary": {
+      "fontFamily": "${dynamicStyle.primaryFont}",
+      "fontWeight": "600"
+    },
+    "secondary": {
+      "fontFamily": "${dynamicStyle.secondaryFont}",
+      "fontWeight": "400"
+    }
+  },
+  "colors": {
+    "primary": "${dynamicStyle.colors[0]}",
+    "secondary": "${dynamicStyle.colors[1]}",
+    "accent": "${dynamicStyle.colors[2]}",
+    "highlight": "${dynamicStyle.colors[3]}",
+    "text": "${dynamicStyle.colors[4]}"
+  },
+  "effects": {
+    "gradient-primary": "${dynamicStyle.gradient}"
+  }
+}`;
+
+            copyToClipboard(figmaTokens);
+            showExportMessage('Figma tokens exported to clipboard!');
+        }
+
+        function exportReact() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const reactTheme = `// React Theme Configuration
+const brandTheme = {
+  typography: {
+    fontFamily: {
+      primary: '"${dynamicStyle.primaryFont}", sans-serif',
+      secondary: '"${dynamicStyle.secondaryFont}", serif',
+    },
+  },
+  colors: {
+    primary: '${dynamicStyle.colors[0]}',
+    secondary: '${dynamicStyle.colors[1]}',
+    accent: '${dynamicStyle.colors[2]}',
+    highlight: '${dynamicStyle.colors[3]}',
+    text: '${dynamicStyle.colors[4]}',
+  },
+  gradients: {
+    primary: '${dynamicStyle.gradient}',
+  },
+};
+
+export default brandTheme;
+`;
+
+            copyToClipboard(reactTheme);
+            showExportMessage('React theme exported to clipboard!');
+        }
+
+        // Helper functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function showExportMessage(message) {
+            const messageEl = document.getElementById('exportMessage');
+            messageEl.innerHTML = `<div class="success-message">✅ ${message}</div>`;
+            setTimeout(() => {
+                messageEl.innerHTML = '';
+            }, 3000);
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
