@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandForge - AI-Powered Brand Style Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=Roboto+Slab:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #0a0a0b;
+            --secondary-bg: #1a1a1d;
+            --accent-bg: #252529;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a7;
+            --accent-color: #4f46e5;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --border-color: #333338;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced glassmorphism effect */
+        .glass {
+            background: rgba(26, 26, 29, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            padding: 24px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-family: inherit;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--accent-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            transform: translateY(-1px);
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-icon {
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 32px;
+            padding: 40px 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            backdrop-filter: blur(20px);
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .vibe-card {
+            padding: 16px;
+            background: var(--accent-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vibe-card:hover {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.1);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--card-shadow);
+        }
+
+        .vibe-card.active {
+            border-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .vibe-card.active::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .vibe-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .vibe-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--accent-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: var(--transition-smooth);
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .slider-container {
+            margin-bottom: 16px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--accent-bg);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(79, 70, 229, 0.4);
+            border: 3px solid white;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .preview-area {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .preview-tabs {
+            display: flex;
+            background: var(--accent-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-tab {
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+            border-bottom: 3px solid transparent;
+        }
+
+        .preview-tab:hover {
+            color: var(--accent-color);
+        }
+
+        .preview-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-color);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .preview-content {
+            padding: 32px;
+        }
+
+        .hero-preview {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 32px;
+            transition: var(--transition-smooth);
+        }
+
+        .hero-preview:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-content {
+            padding: 80px 60px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            border: 2px solid transparent;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .style-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .detail-card {
+            background: var(--accent-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition-smooth);
+        }
+
+        .detail-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.2);
+        }
+
+        .detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .font-preview {
+            margin-bottom: 12px;
+        }
+
+        .font-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .font-sample {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 10px;
+            padding: 4px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-analysis {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+        }
+
+        .analysis-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* New Components */
+        .color-harmony {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .harmony-visual {
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .harmony-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .ai-suggestions {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .suggestion-chip {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--accent-bg);
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 0 8px 8px 0;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .suggestion-chip:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .save-preset {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .preset-input {
+            flex: 1;
+        }
+
+        .tutorial-hint {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--accent-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4);
+            transition: var(--transition-smooth);
+            z-index: 100;
+        }
+
+        .tutorial-hint:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .tutorial-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tutorial-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tutorial-content {
+            background: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-tutorial {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content {
+                padding: 40px 30px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .export-options {
+                flex-direction: column;
+            }
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            width: 48px;
+            height: 24px;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            margin-left: 12px;
+        }
+
+        .theme-toggle-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle.dark .theme-toggle-handle {
+            transform: translateX(24px);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slide-in-up {
+            animation: slideInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header glass">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-palette logo-icon"></i>
+                    BrandForge
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="resetGenerator()">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button class="btn btn-primary" onclick="generateRandomStyle()">
+                        <i class="fas fa-wand-magic-sparkles"></i> Surprise Me
+                    </button>
+                    <div class="theme-toggle" id="themeToggle">
+                        <div class="theme-toggle-handle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="sidebar glass">
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-paint-brush"></i> Brand Vibes
+                    </div>
+                    <div class="section-subtitle">Choose your brand personality or create a custom one</div>
+                    <div class="vibe-grid" id="vibeGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-pen"></i> Custom Description
+                    </div>
+                    <input type="text" class="custom-input" id="customVibe" placeholder="e.g., minimal tech startup with warm touches">
+                    <div class="ai-suggestions">
+                        <div class="harmony-label">AI Suggestions:</div>
+                        <div id="suggestionChips">
+                            <span class="suggestion-chip">Eco-friendly brand</span>
+                            <span class="suggestion-chip">Luxury fashion</span>
+                            <span class="suggestion-chip">Tech startup</span>
+                            <span class="suggestion-chip">Health & wellness</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-sliders-h"></i> Style Parameters
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span><i class="fas fa-crown"></i> Elegance</span>
+                            <span id="eleganceValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="eleganceSlider">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span><i class="fas fa-bold"></i> Boldness</span>
+                            <span id="boldnessValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="boldnessSlider">
+                    </div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span><i class="fas fa-laugh"></i> Playfulness</span>
+                            <span id="playfulnessValue">50</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="playfulnessSlider">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-download"></i> Export Options
+                    </div>
+                    <div class="export-options">
+                        <button class="btn btn-secondary export-btn" onclick="exportCSS()">
+                            <i class="fab fa-css3-alt"></i> CSS
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportJSON()">
+                            <i class="fas fa-code"></i> JSON
+                        </button>
+                        <button class="btn btn-secondary export-btn" onclick="exportFigma()">
+                            <i class="fab fa-figma"></i> Figma
+                        </button>
+                    </div>
+                    <div class="save-preset">
+                        <input type="text" class="custom-input preset-input" id="presetName" placeholder="Preset name">
+                        <button class="btn btn-icon" onclick="savePreset()">
+                            <i class="fas fa-save"></i>
+                        </button>
+                    </div>
+                    <div id="exportMessage"></div>
+                </div>
+            </div>
+
+            <div class="preview-area glass">
+                <div class="preview-tabs">
+                    <button class="preview-tab active" data-tab="hero" onclick="switchTab('hero', this)">
+                        <i class="fas fa-image"></i> Hero Section
+                    </button>
+                    <button class="preview-tab" data-tab="details" onclick="switchTab('details', this)">
+                        <i class="fas fa-palette"></i> Style Details
+                    </button>
+                    <button class="preview-tab" data-tab="analysis" onclick="switchTab('analysis', this)">
+                        <i class="fas fa-chart-line"></i> Brand Analysis
+                    </button>
+                </div>
+                <div class="preview-content">
+                    <div id="loadingState" class="loading-state" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Generating your brand style...</p>
+                    </div>
+                    
+                    <div id="heroTab" class="preview-panel">
+                        <div class="hero-preview" id="heroPreview">
+                            <div class="hero-content" id="heroContent">
+                                <h1 class="hero-title" id="heroTitle">Your Brand Story Starts Here</h1>
+                                <p class="hero-subtitle" id="heroSubtitle">Crafting exceptional experiences with purpose-driven design</p>
+                                <a href="#" class="hero-cta" id="heroCTA">Get Started</a>
+                            </div>
+                        </div>
+                        <div class="color-harmony">
+                            <div class="harmony-label">Color Harmony Visualization:</div>
+                            <div class="harmony-visual" id="harmonyVisual">
+                                <!-- Color harmony bars will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detailsTab" class="preview-panel" style="display: none;">
+                        <div class="style-details">
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    <i class="fas fa-font"></i> Typography
+                                </div>
+                                <div class="font-preview" id="primaryFontPreview">
+                                    <div class="font-name">Primary Font</div>
+                                    <div class="font-sample">Inter</div>
+                                </div>
+                                <div class="font-preview" id="secondaryFontPreview">
+                                    <div class="font-name">Secondary Font</div>
+                                    <div class="font-sample">Playfair Display</div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    <i class="fas fa-palette"></i> Color Palette
+                                </div>
+                                <div class="color-palette" id="colorPalette">
+                                    <!-- Colors populated by JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-title">
+                                    <i class="fas fa-shapes"></i> UI Elements
+                                </div>
+                                <div class="ui-elements-preview">
+                                    <button class="btn btn-primary">Button</button>
+                                    <button class="btn btn-secondary">Secondary</button>
+                                    <input type="text" class="custom-input" placeholder="Input field" style="margin-top: 12px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="analysisTab" class="preview-panel" style="display: none;">
+                        <div class="brand-analysis">
+                            <div class="analysis-title">Brand Personality Analysis</div>
+                            <div class="analysis-text" id="brandAnalysis">
+                                This brand style combines modern sophistication with approachable elegance. The typography choices reflect professionalism while maintaining readability across all touchpoints.
+                            </div>
+                        </div>
+                        <div class="brand-analysis">
+                            <div class="analysis-title">Accessibility Score</div>
+                            <div class="analysis-text" id="accessibilityScore">
+                                Calculating contrast ratios and accessibility metrics...
+                            </div>
+                        </div>
+                        <div class="brand-analysis">
+                            <div class="analysis-title">Recommended Applications</div>
+                            <div class="analysis-text" id="recommendedApplications">
+                                This style works well for tech companies, creative agencies, and modern lifestyle brands. Consider using it for web applications, marketing materials, and product packaging.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tutorial-hint" onclick="showTutorial()">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <div class="tutorial-modal" id="tutorialModal">
+        <div class="tutorial-content">
+            <button class="close-tutorial" onclick="hideTutorial()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Welcome to BrandForge</h2>
+            <p>Create stunning brand identities in seconds with our AI-powered style generator.</p>
+            
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i> How to Use
+                </div>
+                <ol>
+                    <li>Select a brand vibe that matches your personality</li>
+                    <li>Customize with sliders or use the AI suggestions</li>
+                    <li>Preview your style across different contexts</li>
+                    <li>Export your brand guidelines with one click</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-rocket"></i> Pro Tips
+                </div>
+                <ul>
+                    <li>Use the "Surprise Me" button for instant inspiration</li>
+                    <li>Save your favorite presets for later use</li>
+                    <li>Check the accessibility score for inclusive design</li>
+                    <li>Export to Figma for seamless design workflow</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced brand style configurations with more properties
+        const brandVibes = [
+            {
+                id: 'techy-elegant',
+                name: 'Tech Elegant',
+                desc: 'Clean, modern, sophisticated',
+                primaryFont: 'Inter',
+                secondaryFont: 'JetBrains Mono',
+                colors: ['#000000', '#ffffff', '#4f46e5', '#8b5cf6', '#f1f5f9'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'A sophisticated tech aesthetic that balances cutting-edge innovation with timeless elegance.',
+                accessibility: 92,
+                applications: 'SaaS products, tech startups, digital agencies'
+            },
+            {
+                id: 'warm-friendly',
+                name: 'Warm Friendly',
+                desc: 'Approachable, cozy, inviting',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Merriweather',
+                colors: ['#7c2d12', '#fed7aa', '#f97316', '#fbbf24', '#fef3c7'],
+                gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+                analysis: 'A welcoming brand that prioritizes human connection and emotional warmth in every interaction.',
+                accessibility: 88,
+                applications: 'Health & wellness, food brands, community platforms'
+            },
+            {
+                id: 'bold-creative',
+                name: 'Bold Creative',
+                desc: 'Vibrant, artistic, energetic',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Playfair Display',
+                colors: ['#1a1a2e', '#16213e', '#e94560', '#f39c12', '#ffffff'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'An expressive brand that celebrates creativity and isn\'t afraid to make bold visual statements.',
+                accessibility: 85,
+                applications: 'Creative agencies, entertainment, lifestyle brands'
+            },
+            {
+                id: 'minimal-clean',
+                name: 'Minimal Clean',
+                desc: 'Simple, pure, focused',
+                primaryFont: 'Inter',
+                secondaryFont: 'Source Sans Pro',
+                colors: ['#fafafa', '#374151', '#6b7280', '#d1d5db', '#000000'],
+                gradient: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                analysis: 'A refined minimalist approach that lets content breathe and focuses on essential elements.',
+                accessibility: 96,
+                applications: 'Product design, architecture, consulting firms'
+            },
+            {
+                id: 'luxury-premium',
+                name: 'Luxury Premium',
+                desc: 'Exclusive, refined, high-end',
+                primaryFont: 'Playfair Display',
+                secondaryFont: 'Inter',
+                colors: ['#1f2937', '#d4af37', '#ffffff', '#f3f4f6', '#111827'],
+                gradient: 'linear-gradient(135deg, #434343 0%, black 100%)',
+                analysis: 'An upscale brand identity that conveys exclusivity, craftsmanship, and premium quality.',
+                accessibility: 90,
+                applications: 'Luxury goods, financial services, high-end hospitality'
+            },
+            {
+                id: 'playful-fun',
+                name: 'Playful Fun',
+                desc: 'Cheerful, dynamic, youthful',
+                primaryFont: 'Poppins',
+                secondaryFont: 'Inter',
+                colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b'],
+                gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                analysis: 'A vibrant brand that embraces joy, creativity, and positive energy in its visual language.',
+                accessibility: 82,
+                applications: 'Children\'s products, gaming, educational platforms'
+            }
+        ];
+
+        let currentStyle = brandVibes[0];
+        let isGenerating = false;
+        let presets = JSON.parse(localStorage.getItem('brandforge-presets')) || [];
+
+        // Initialize the application
+        function initApp() {
+            populateVibeGrid();
+            setupEventListeners();
+            generateStyle();
+            loadPresets();
+            checkFirstTimeUser();
+        }
+
+        // Populate vibe selection grid
+        function populateVibeGrid() {
+            const grid = document.getElementById('vibeGrid');
+            grid.innerHTML = brandVibes.map((vibe, index) => `
+                <div class="vibe-card ${index === 0 ? 'active' : ''}" onclick="selectVibe('${vibe.id}', this)">
+                    <div class="vibe-name">${vibe.name}</div>
+                    <div class="vibe-desc">${vibe.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Sliders
+            ['elegance', 'boldness', 'playfulness'].forEach(param => {
+                const slider = document.getElementById(`${param}Slider`);
+                const valueLabel = document.getElementById(`${param}Value`);
+                
+                slider.addEventListener('input', (e) => {
+                    valueLabel.textContent = e.target.value;
+                    debounceGenerateStyle();
+                });
+            });
+
+            // Custom vibe input
+            document.getElementById('customVibe').addEventListener('input', debounceGenerateStyle);
+            
+            // Suggestion chips
+            document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.getElementById('customVibe').value = chip.textContent;
+                    generateStyle();
+                });
+            });
+            
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        }
+
+        // Debounced style generation
+        let debounceTimer;
+        function debounceGenerateStyle() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(generateStyle, 300);
+        }
+
+        // Select brand vibe
+        function selectVibe(vibeId, element) {
+            // Remove active class from all cards
+            document.querySelectorAll('.vibe-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            element.classList.add('active');
+            
+            // Find and set current style
+            currentStyle = brandVibes.find(vibe => vibe.id === vibeId);
+            generateStyle();
+        }
+
+        // Generate style based on current selections
+        function generateStyle() {
+            if (isGenerating) return;
+            
+            showLoading(true);
+            
+            setTimeout(() => {
+                const customVibe = document.getElementById('customVibe').value;
+                const elegance = parseInt(document.getElementById('eleganceSlider').value);
+                const boldness = parseInt(document.getElementById('boldnessSlider').value);
+                const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+
+                // Generate dynamic style based on parameters
+                const dynamicStyle = generateDynamicStyle(currentStyle, {
+                    customVibe,
+                    elegance,
+                    boldness,
+                    playfulness
+                });
+
+                updatePreview(dynamicStyle);
+                updateStyleDetails(dynamicStyle);
+                updateBrandAnalysis(dynamicStyle);
+                updateColorHarmony(dynamicStyle);
+                showLoading(false);
+            }, 800);
+        }
+
+        // Generate dynamic style variations
+        function generateDynamicStyle(baseStyle, params) {
+            const style = { ...baseStyle };
+            
+            // Modify colors based on parameters
+            if (params.boldness > 70) {
+                style.colors = adjustColorSaturation(style.colors, 1.3);
+            } else if (params.boldness < 30) {
+                style.colors = adjustColorSaturation(style.colors, 0.7);
+            }
+
+            // Adjust typography based on elegance
+            if (params.elegance > 70) {
+                style.primaryFont = 'Playfair Display';
+                style.secondaryFont = 'Inter';
+            } else if (params.elegance < 30) {
+                style.primaryFont = 'Inter';
+                style.secondaryFont = 'JetBrains Mono';
+            }
+
+            // Update analysis based on custom vibe and parameters
+            style.analysis = generateDynamicAnalysis(params);
+            
+            // Calculate accessibility score based on color contrast
+            style.accessibility = calculateAccessibilityScore(style.colors);
+            
+            // Update applications based on parameters
+            style.applications = generateApplications(params);
+
+            return style;
+        }
+
+        // Adjust color saturation (simplified)
+        function adjustColorSaturation(colors, factor) {
+            return colors.map(color => {
+                if (color === '#ffffff' || color === '#000000') return color;
+                // This is a simplified approach - in a real app you'd use proper color manipulation
+                return color;
+            });
+        }
+        
+        // Calculate accessibility score based on color contrast
+        function calculateAccessibilityScore(colors) {
+            // Simplified calculation - in a real app you'd use proper contrast ratio formulas
+            let score = 85;
+            if (colors[0] === '#000000' && colors[1] === '#ffffff') score = 95;
+            if (colors[0] === '#ffffff' && colors[1] === '#000000') score = 95;
+            return score;
+        }
+        
+        // Generate applications text
+        function generateApplications(params) {
+            let apps = [];
+            if (params.elegance > 70) apps.push('luxury brands', 'premium services');
+            if (params.boldness > 70) apps.push('creative agencies', 'bold startups');
+            if (params.playfulness > 70) apps.push('youth brands', 'entertainment');
+            if (apps.length === 0) apps.push('tech companies', 'modern businesses');
+            
+            return `This style works well for ${apps.slice(0, 2).join(', ')} and more.`;
+        }
+
+        // Generate dynamic brand analysis
+        function generateDynamicAnalysis(params) {
+            let analysis = "This brand style ";
+            
+            if (params.elegance > 70) {
+                analysis += "emphasizes sophisticated elegance and refined aesthetics. ";
+            } else if (params.elegance < 30) {
+                analysis += "prioritizes casual approachability and unpretentious design. ";
+            } else {
+                analysis += "balances elegance with accessibility. ";
+            }
+
+            if (params.boldness > 70) {
+                analysis += "The bold approach ensures strong visual impact and memorable brand presence. ";
+            } else if (params.boldness < 30) {
+                analysis += "The subtle approach creates a calm, trustworthy impression. ";
+            }
+
+            if (params.playfulness > 70) {
+                analysis += "Playful elements add personality and human connection to the brand experience.";
+            } else if (params.playfulness < 30) {
+                analysis += "The serious tone conveys professionalism and reliability.";
+            }
+
+            if (params.customVibe) {
+                analysis += ` The custom direction "${params.customVibe}" adds unique personality traits that differentiate this brand in the market.`;
+            }
+
+            return analysis;
+        }
+
+        // Update hero preview
+        function updatePreview(style) {
+            const heroContent = document.getElementById('heroContent');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            const heroCTA = document.getElementById('heroCTA');
+
+            // Apply styles
+            heroContent.style.background = style.gradient;
+            heroContent.style.fontFamily = style.primaryFont;
+            
+            heroTitle.style.fontFamily = style.primaryFont;
+            heroTitle.style.color = style.colors[4] || '#ffffff';
+            
+            heroSubtitle.style.fontFamily = style.secondaryFont;
+            heroSubtitle.style.color = style.colors[4] || '#ffffff';
+            
+            heroCTA.style.backgroundColor = style.colors[2] || '#4f46e5';
+            heroCTA.style.color = style.colors[4] || '#ffffff';
+            heroCTA.style.fontFamily = style.primaryFont;
+            
+            // Update UI elements in the details tab
+            const buttons = document.querySelectorAll('.ui-elements-preview .btn');
+            buttons.forEach(btn => {
+                if (btn.classList.contains('btn-primary')) {
+                    btn.style.backgroundColor = style.colors[2];
+                }
+                btn.style.fontFamily = style.primaryFont;
+            });
+            
+            const inputs = document.querySelectorAll('.ui-elements-preview .custom-input');
+            inputs.forEach(input => {
+                input.style.fontFamily = style.primaryFont;
+                input.style.borderColor = style.colors[3];
+            });
+        }
+        
+        // Update color harmony visualization
+        function updateColorHarmony(style) {
+            const harmonyVisual = document.getElementById('harmonyVisual');
+            harmonyVisual.innerHTML = '';
+            
+            style.colors.forEach(color => {
+                const colorBar = document.createElement('div');
+                colorBar.style.flex = '1';
+                colorBar.style.background = color;
+                harmonyVisual.appendChild(colorBar);
+            });
+        }
+
+        // Update style details panel
+        function updateStyleDetails(style) {
+            // Update font previews
+            const primaryFontPreview = document.getElementById('primaryFontPreview');
+            const secondaryFontPreview = document.getElementById('secondaryFontPreview');
+            
+            primaryFontPreview.querySelector('.font-sample').textContent = style.primaryFont;
+            primaryFontPreview.querySelector('.font-sample').style.fontFamily = style.primaryFont;
+            
+            secondaryFontPreview.querySelector('.font-sample').textContent = style.secondaryFont;
+            secondaryFontPreview.querySelector('.font-sample').style.fontFamily = style.secondaryFont;
+
+            // Update color palette
+            const colorPalette = document.getElementById('colorPalette');
+            colorPalette.innerHTML = style.colors.map((color, index) => `
+                <div class="color-swatch" style="background-color: ${color}" onclick="copyToClipboard('${color}')">
+                    <div class="color-label">${color.toUpperCase()}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update brand analysis
+        function updateBrandAnalysis(style) {
+            document.getElementById('brandAnalysis').textContent = style.analysis;
+            document.getElementById('accessibilityScore').textContent = 
+                `This color palette has an accessibility score of ${style.accessibility}/100. ${style.accessibility > 90 ? 'Excellent contrast ratios!' : 'Consider testing with actual content.'}`;
+            document.getElementById('recommendedApplications').textContent = style.applications;
+        }
+
+        // Show/hide loading state
+        function showLoading(show) {
+            isGenerating = show;
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+            document.querySelector('.preview-panel:not([style*="display: none"])').style.display = show ? 'none' : 'block';
+        }
+
+        // Switch preview tabs
+        function switchTab(tabName, element) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.preview-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            element.classList.add('active');
+            
+            // Hide all panels
+            document.querySelectorAll('.preview-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            
+            // Show selected panel
+            document.getElementById(`${tabName}Tab`).style.display = 'block';
+        }
+
+        // Generate random style
+        function generateRandomStyle() {
+            // Select random vibe
+            const randomVibe = brandVibes[Math.floor(Math.random() * brandVibes.length)];
+            currentStyle = randomVibe;
+            
+            // Update UI
+            document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                card.classList.toggle('active', brandVibes[index].id === randomVibe.id);
+            });
+            
+            // Set random slider values
+            document.getElementById('eleganceSlider').value = Math.floor(Math.random() * 100);
+            document.getElementById('boldnessSlider').value = Math.floor(Math.random() * 100);
+            document.getElementById('playfulnessSlider').value = Math.floor(Math.random() * 100);
+            
+            // Update slider labels
+            document.getElementById('eleganceValue').textContent = document.getElementById('eleganceSlider').value;
+            document.getElementById('boldnessValue').textContent = document.getElementById('boldnessSlider').value;
+            document.getElementById('playfulnessValue').textContent = document.getElementById('playfulnessSlider').value;
+            
+            // Clear custom vibe
+            document.getElementById('customVibe').value = '';
+            
+            generateStyle();
+        }
+
+        // Reset generator
+        function resetGenerator() {
+            // Reset to first vibe
+            currentStyle = brandVibes[0];
+            
+            // Update vibe cards
+            document.querySelectorAll('.vibe-card').forEach((card, index) => {
+                card.classList.toggle('active', index === 0);
+            });
+            
+            // Reset sliders
+            document.getElementById('eleganceSlider').value = 50;
+            document.getElementById('boldnessSlider').value = 50;
+            document.getElementById('playfulnessSlider').value = 50;
+            
+            // Update labels
+            document.getElementById('eleganceValue').textContent = '50';
+            document.getElementById('boldnessValue').textContent = '50';
+            document.getElementById('playfulnessValue').textContent = '50';
+            
+            // Clear custom vibe
+            document.getElementById('customVibe').value = '';
+            
+            // Clear export message
+            document.getElementById('exportMessage').innerHTML = '';
+            
+            generateStyle();
+        }
+        
+        // Save preset
+        function savePreset() {
+            const presetName = document.getElementById('presetName').value;
+            if (!presetName) {
+                showExportMessage('Please enter a name for your preset', 'error');
+                return;
+            }
+            
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            const customVibe = document.getElementById('customVibe').value;
+            
+            const preset = {
+                id: Date.now(),
+                name: presetName,
+                vibe: currentStyle.id,
+                elegance,
+                boldness,
+                playfulness,
+                customVibe,
+                timestamp: new Date().toISOString()
+            };
+            
+            presets.push(preset);
+            localStorage.setItem('brandforge-presets', JSON.stringify(presets));
+            
+            showExportMessage(`Preset "${presetName}" saved successfully!`);
+            document.getElementById('presetName').value = '';
+            
+            // Update preset list if we have a UI for it
+            loadPresets();
+        }
+        
+        // Load presets
+        function loadPresets() {
+            // This would populate a preset dropdown or list
+            // Implementation depends on UI requirements
+            console.log('Loaded presets:', presets);
+        }
+        
+        // Toggle theme
+        function toggleTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const isDark = document.body.classList.toggle('dark-theme');
+            themeToggle.classList.toggle('dark', isDark);
+            
+            // Save theme preference
+            localStorage.setItem('brandforge-theme', isDark ? 'dark' : 'light');
+        }
+        
+        // Check if first time user
+        function checkFirstTimeUser() {
+            const hasVisited = localStorage.getItem('brandforge-visited');
+            if (!hasVisited) {
+                setTimeout(showTutorial, 1000);
+                localStorage.setItem('brandforge-visited', 'true');
+            }
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('brandforge-theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('themeToggle').classList.add('dark');
+            }
+        }
+        
+        // Show tutorial
+        function showTutorial() {
+            document.getElementById('tutorialModal').classList.add('active');
+        }
+        
+        // Hide tutorial
+        function hideTutorial() {
+            document.getElementById('tutorialModal').classList.remove('active');
+        }
+
+        // Export functions
+        function exportCSS() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const css = `/* Generated Brand Style CSS */
+:root {
+    --primary-font: '${dynamicStyle.primaryFont}', sans-serif;
+    --secondary-font: '${dynamicStyle.secondaryFont}', serif;
+    --color-primary: ${dynamicStyle.colors[0]};
+    --color-secondary: ${dynamicStyle.colors[1]};
+    --color-accent: ${dynamicStyle.colors[2]};
+    --color-highlight: ${dynamicStyle.colors[3]};
+    --color-text: ${dynamicStyle.colors[4]};
+    --gradient-primary: ${dynamicStyle.gradient};
+}
+
+.brand-title { 
+    font-family: var(--primary-font);
+    color: var(--color-text);
+}
+
+.brand-body { 
+    font-family: var(--secondary-font);
+    color: var(--color-text);
+}
+
+.brand-button {
+    background: var(--color-accent);
+    color: var(--color-text);
+    font-family: var(--primary-font);
+}
+
+.brand-hero {
+    background: var(--gradient-primary);
+}`;
+
+            copyToClipboard(css);
+            showExportMessage('CSS exported to clipboard!');
+        }
+
+        function exportJSON() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const jsonData = {
+                brandStyle: {
+                    id: dynamicStyle.id,
+                    name: dynamicStyle.name,
+                    typography: {
+                        primary: dynamicStyle.primaryFont,
+                        secondary: dynamicStyle.secondaryFont
+                    },
+                    colors: {
+                        primary: dynamicStyle.colors[0],
+                        secondary: dynamicStyle.colors[1],
+                        accent: dynamicStyle.colors[2],
+                        highlight: dynamicStyle.colors[3],
+                        text: dynamicStyle.colors[4]
+                    },
+                    gradient: dynamicStyle.gradient,
+                    parameters: {
+                        elegance: elegance,
+                        boldness: boldness,
+                        playfulness: playfulness
+                    },
+                    analysis: dynamicStyle.analysis,
+                    generatedAt: new Date().toISOString()
+                }
+            };
+
+            copyToClipboard(JSON.stringify(jsonData, null, 2));
+            showExportMessage('JSON exported to clipboard!');
+        }
+
+        function exportFigma() {
+            const elegance = parseInt(document.getElementById('eleganceSlider').value);
+            const boldness = parseInt(document.getElementById('boldnessSlider').value);
+            const playfulness = parseInt(document.getElementById('playfulnessSlider').value);
+            
+            const dynamicStyle = generateDynamicStyle(currentStyle, {
+                customVibe: document.getElementById('customVibe').value,
+                elegance, boldness, playfulness
+            });
+
+            const figmaTokens = `{
+  "typography": {
+    "primary": {
+      "fontFamily": "${dynamicStyle.primaryFont}",
+      "fontWeight": "600"
+    },
+    "secondary": {
+      "fontFamily": "${dynamicStyle.secondaryFont}",
+      "fontWeight": "400"
+    }
+  },
+  "colors": {
+    "primary": "${dynamicStyle.colors[0]}",
+    "secondary": "${dynamicStyle.colors[1]}",
+    "accent": "${dynamicStyle.colors[2]}",
+    "highlight": "${dynamicStyle.colors[3]}",
+    "text": "${dynamicStyle.colors[4]}"
+  },
+  "effects": {
+    "gradient-primary": "${dynamicStyle.gradient}"
+  }
+}`;
+
+            copyToClipboard(figmaTokens);
+            showExportMessage('Figma tokens exported to clipboard!');
+        }
+
+        // Helper functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function showExportMessage(message, type = 'success') {
+            const messageEl = document.getElementById('exportMessage');
+            const color = type === 'success' ? 'var(--success-color)' : 'var(--error-color)';
+            messageEl.innerHTML = `<div class="success-message" style="color: ${color}; border-color: ${color}; background: ${color}10;">${type === 'success' ? '✅' : '⚠️'} ${message}</div>`;
+            setTimeout(() => {
+                messageEl.innerHTML = '';
+            }, 3000);
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
