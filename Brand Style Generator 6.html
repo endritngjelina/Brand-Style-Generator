@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Style Generator - Professional Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto+Mono:wght@400;500&family=Poppins:wght@300;400;500;600&family=Merriweather:wght@300;400;700&family=Lato:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            min-height: 100vh;
+            align-items: start;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .preview-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vibe-btn {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4a5568;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vibe-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: left 0.5s;
+        }
+
+        .vibe-btn:hover::before {
+            left: 100%;
+        }
+
+        .vibe-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .vibe-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .result-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .result-section:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            gap: 0.5rem;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: auto;
+        }
+
+        .copy-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        .font-preview {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .font-item {
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .font-name {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .font-sample {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .font-usage {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .color-item {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .color-item:hover {
+            transform: scale(1.1);
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .color-code {
+            font-size: 0.75rem;
+            font-family: 'Roboto Mono', monospace;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .hero-preview {
+            background: var(--bg-color, #ffffff);
+            color: var(--text-color, #2d3748);
+            border-radius: 16px;
+            padding: 4rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .hero-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-pattern, none);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            background: var(--accent-color, #667eea);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .export-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .export-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .export-btn {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .export-btn:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .inspiration-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .inspiration-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .inspiration-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .control-panel {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="control-panel">
+            <h1><i class="fas fa-palette"></i> Brand Style Generator</h1>
+            <p class="subtitle">Create professional brand guidelines in seconds with AI-powered design intelligence</p>
+
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Brand Personality
+                </div>
+                <div class="vibe-grid">
+                    <div class="vibe-btn" data-vibe="modern-minimal">Modern & Minimal</div>
+                    <div class="vibe-btn" data-vibe="techy-elegant">Techy & Elegant</div>
+                    <div class="vibe-btn" data-vibe="bold-creative">Bold & Creative</div>
+                    <div class="vibe-btn" data-vibe="corporate-trustworthy">Corporate & Trustworthy</div>
+                    <div class="vibe-btn" data-vibe="playful-friendly">Playful & Friendly</div>
+                    <div class="vibe-btn" data-vibe="luxury-sophisticated">Luxury & Sophisticated</div>
+                    <div class="vibe-btn" data-vibe="eco-natural">Eco & Natural</div>
+                    <div class="vibe-btn" data-vibe="retro-vintage">Retro & Vintage</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-edit"></i>
+                    Custom Description (Optional)
+                </div>
+                <input type="text" class="custom-input" id="customVibe" placeholder="e.g., Innovative healthcare startup with a human touch...">
+            </div>
+
+            <button class="generate-btn" id="generateBtn">
+                <i class="fas fa-magic"></i> Generate Brand Style
+            </button>
+
+            <div class="inspiration-section">
+                <div class="inspiration-title">💡 Pro Tip</div>
+                <div class="inspiration-text">
+                    Great brands combine emotional appeal with functional clarity. Consider how your color choices affect user behavior and accessibility.
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div id="results" style="display: none;">
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-font"></i> Typography Pairing
+                        <button class="copy-btn" onclick="copyFonts()">Copy CSS</button>
+                    </div>
+                    <div class="font-preview" id="fontPreview"></div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-palette"></i> Color Palette
+                        <button class="copy-btn" onclick="copyColors()">Copy Hex</button>
+                    </div>
+                    <div class="color-palette" id="colorPalette"></div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-desktop"></i> Hero Section Preview
+                    </div>
+                    <div class="hero-preview" id="heroPreview">
+                        <div class="hero-content">
+                            <h2 class="hero-title" id="heroTitle">Your Brand Story Starts Here</h2>
+                            <p class="hero-subtitle" id="heroSubtitle">Crafting exceptional experiences that resonate with your audience and drive meaningful connections.</p>
+                            <button class="hero-cta">Get Started Today</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-section">
+                    <div class="section-title">
+                        <i class="fas fa-download"></i> Export Options
+                    </div>
+                    <div class="export-grid">
+                        <button class="export-btn" onclick="exportCSS()">
+                            <i class="fab fa-css3-alt"></i><br>CSS Variables
+                        </button>
+                        <button class="export-btn" onclick="exportSass()">
+                            <i class="fab fa-sass"></i><br>SCSS File
+                        </button>
+                        <button class="export-btn" onclick="exportJSON()">
+                            <i class="fas fa-file-code"></i><br>JSON Config
+                        </button>
+                        <button class="export-btn" onclick="exportSketch()">
+                            <i class="fas fa-paint-brush"></i><br>Design Tokens
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="placeholder" class="result-section" style="text-align: center; padding: 4rem 2rem;">
+                <i class="fas fa-rocket" style="font-size: 3rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
+                <h3 style="color: #718096; margin-bottom: 1rem;">Ready to Create Something Amazing?</h3>
+                <p style="color: #a0aec0;">Select a brand personality and watch the magic happen. Our AI will generate a complete brand style guide tailored to your vision.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Brand style configurations
+        const brandStyles = {
+            'modern-minimal': {
+                fonts: [
+                    { name: 'Inter', usage: 'Headings & UI', weight: '600' },
+                    { name: 'Lato', usage: 'Body text & content', weight: '400' }
+                ],
+                colors: ['#2D3748', '#4A5568', '#718096', '#E2E8F0', '#F7FAFC'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                    textColor: '#2D3748',
+                    accentColor: '#4A5568'
+                },
+                title: 'Simplicity Meets Innovation',
+                subtitle: 'Clean, purposeful design that speaks volumes through restraint and precision.'
+            },
+            'techy-elegant': {
+                fonts: [
+                    { name: 'Poppins', usage: 'Modern headings', weight: '600' },
+                    { name: 'Roboto Mono', usage: 'Code & technical content', weight: '400' }
+                ],
+                colors: ['#1A202C', '#2D3748', '#667EEA', '#764BA2', '#E2E8F0'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#ffffff'
+                },
+                title: 'Technology Refined',
+                subtitle: 'Where cutting-edge innovation meets sophisticated design aesthetics.'
+            },
+            'bold-creative': {
+                fonts: [
+                    { name: 'Playfair Display', usage: 'Dramatic headlines', weight: '700' },
+                    { name: 'Inter', usage: 'Supporting content', weight: '400' }
+                ],
+                colors: ['#E53E3E', '#DD6B20', '#D69E2E', '#38A169', '#3182CE'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#ffffff'
+                },
+                title: 'Dare to Be Different',
+                subtitle: 'Bold expressions that break boundaries and capture attention in every moment.'
+            },
+            'corporate-trustworthy': {
+                fonts: [
+                    { name: 'Merriweather', usage: 'Professional headings', weight: '700' },
+                    { name: 'Lato', usage: 'Business content', weight: '400' }
+                ],
+                colors: ['#2C5282', '#3182CE', '#63B3ED', '#BEE3F8', '#EBF8FF'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #2c5282 0%, #3182ce 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#63B3ED'
+                },
+                title: 'Built on Trust',
+                subtitle: 'Reliable expertise and proven results that inspire confidence in every interaction.'
+            },
+            'playful-friendly': {
+                fonts: [
+                    { name: 'Poppins', usage: 'Friendly headings', weight: '600' },
+                    { name: 'Inter', usage: 'Approachable content', weight: '400' }
+                ],
+                colors: ['#FF6B9D', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #ff6b9d 0%, #4ecdc4 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#ffffff'
+                },
+                title: 'Joy in Every Detail',
+                subtitle: 'Bringing smiles and positive energy to every touchpoint of your experience.'
+            },
+            'luxury-sophisticated': {
+                fonts: [
+                    { name: 'Playfair Display', usage: 'Elegant headings', weight: '600' },
+                    { name: 'Lato', usage: 'Refined content', weight: '300' }
+                ],
+                colors: ['#1A1A1A', '#8B7355', '#D4AF37', '#F5F5DC', '#FFFFFF'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #8b7355 100%)',
+                    textColor: '#f5f5dc',
+                    accentColor: '#d4af37'
+                },
+                title: 'Exquisite by Nature',
+                subtitle: 'Timeless elegance and uncompromising quality define every aspect of our craft.'
+            },
+            'eco-natural': {
+                fonts: [
+                    { name: 'Merriweather', usage: 'Organic headings', weight: '400' },
+                    { name: 'Lato', usage: 'Natural content', weight: '400' }
+                ],
+                colors: ['#22543D', '#38A169', '#68D391', '#C6F6D5', '#F0FFF4'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #22543d 0%, #38a169 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#68D391'
+                },
+                title: 'Naturally Inspired',
+                subtitle: 'Sustainable solutions that honor our planet while nurturing future generations.'
+            },
+            'retro-vintage': {
+                fonts: [
+                    { name: 'Playfair Display', usage: 'Vintage headings', weight: '700' },
+                    { name: 'Merriweather', usage: 'Classic content', weight: '400' }
+                ],
+                colors: ['#8B4513', '#D2691E', '#F4A460', '#FFDAB9', '#FFF8DC'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #8b4513 0%, #d2691e 100%)',
+                    textColor: '#fff8dc',
+                    accentColor: '#ffdab9'
+                },
+                title: 'Timeless Character',
+                subtitle: 'Classic aesthetics meet modern sensibilities in a celebration of enduring style.'
+            }
+        };
+
+        let currentStyle = null;
+        let generatedColors = [];
+        let generatedFonts = [];
+
+        // Vibe selection handling
+        document.querySelectorAll('.vibe-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.vibe-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Generate brand style
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const activeVibe = document.querySelector('.vibe-btn.active');
+            const customVibe = document.getElementById('customVibe').value;
+            
+            if (!activeVibe && !customVibe) {
+                alert('Please select a brand personality or enter a custom description.');
+                return;
+            }
+
+            // Loading animation
+            this.classList.add('loading');
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            
+            setTimeout(() => {
+                const vibeKey = activeVibe ? activeVibe.dataset.vibe : 'modern-minimal';
+                currentStyle = brandStyles[vibeKey] || brandStyles['modern-minimal'];
+                
+                // If custom vibe, modify the style slightly
+                if (customVibe) {
+                    customizeStyleBasedOnInput(customVibe);
+                }
+                
+                generateResults();
+                
+                // Reset button
+                this.classList.remove('loading');
+                this.innerHTML = '<i class="fas fa-magic"></i> Generate Brand Style';
+                
+                // Show results with animation
+                document.getElementById('placeholder').style.display = 'none';
+                const results = document.getElementById('results');
+                results.style.display = 'block';
+                results.classList.add('fade-in');
+            }, 2000);
+        });
+
+        function customizeStyleBasedOnInput(input) {
+            const keywords = input.toLowerCase();
+            
+            // Modify colors based on keywords
+            if (keywords.includes('blue') || keywords.includes('tech')) {
+                currentStyle.colors = ['#1E3A8A', '#3B82F6', '#60A5FA', '#DBEAFE', '#EFF6FF'];
+            } else if (keywords.includes('green') || keywords.includes('eco')) {
+                currentStyle.colors = ['#14532D', '#16A34A', '#4ADE80', '#DCFCE7', '#F0FDF4'];
+            } else if (keywords.includes('red') || keywords.includes('bold')) {
+                currentStyle.colors = ['#991B1B', '#DC2626', '#F87171', '#FECACA', '#FEF2F2'];
+            }
+            
+            // Modify fonts based on keywords
+            if (keywords.includes('modern') || keywords.includes('clean')) {
+                currentStyle.fonts = [
+                    { name: 'Inter', usage: 'Modern headings', weight: '600' },
+                    { name: 'Lato', usage: 'Clean content', weight: '400' }
+                ];
+            } else if (keywords.includes('elegant') || keywords.includes('luxury')) {
+                currentStyle.fonts = [
+                    { name: 'Playfair Display', usage: 'Elegant headings', weight: '600' },
+                    { name: 'Lato', usage: 'Refined content', weight: '300' }
+                ];
+            }
+        }
+
+        function generateResults() {
+            generateFontPreview();
+            generateColorPalette();
+            generateHeroPreview();
+            generatedColors = [...currentStyle.colors];
+            generatedFonts = [...currentStyle.fonts];
+        }
+
+        function generateFontPreview() {
+            const container = document.getElementById('fontPreview');
+            container.innerHTML = '';
+            
+            currentStyle.fonts.forEach(font => {
+                const fontItem = document.createElement('div');
+                fontItem.className = 'font-item';
+                fontItem.innerHTML = `
+                    <div class="font-name">${font.name} - ${font.weight}</div>
+                    <div class="font-sample" style="font-family: '${font.name}', sans-serif; font-weight: ${font.weight}">
+                        The quick brown fox jumps over the lazy dog
+                    </div>
+                    <div class="font-usage">${font.usage}</div>
+                `;
+                container.appendChild(fontItem);
+            });
+        }
+
+        function generateColorPalette() {
+            const container = document.getElementById('colorPalette');
+            container.innerHTML = '';
+            
+            currentStyle.colors.forEach((color, index) => {
+                const colorItem = document.createElement('div');
+                colorItem.className = 'color-item';
+                colorItem.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${color}"></div>
+                    <div class="color-code">${color}</div>
+                `;
+                colorItem.addEventListener('click', () => copyToClipboard(color));
+                container.appendChild(colorItem);
+            });
+        }
+
+        function generateHeroPreview() {
+            const hero = document.getElementById('heroPreview');
+            const title = document.getElementById('heroTitle');
+            const subtitle = document.getElementById('heroSubtitle');
+            
+            // Apply styles
+            hero.style.background = currentStyle.heroStyle.background;
+            hero.style.color = currentStyle.heroStyle.textColor;
+            hero.style.setProperty('--accent-color', currentStyle.heroStyle.accentColor);
+            
+            // Update content
+            title.textContent = currentStyle.title;
+            subtitle.textContent = currentStyle.subtitle;
+            
+            // Apply fonts
+            title.style.fontFamily = `'${currentStyle.fonts[0].name}', sans-serif`;
+            subtitle.style.fontFamily = `'${currentStyle.fonts[1].name}', sans-serif`;
+        }
+
+        // Copy functions
+        function copyFonts() {
+            const css = `
+/* Typography */
+:root {
+  --font-heading: '${currentStyle.fonts[0].name}', sans-serif;
+  --font-body: '${currentStyle.fonts[1].name}', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: ${currentStyle.fonts[0].weight};
+}
+
+body, p, span, div {
+  font-family: var(--font-body);
+  font-weight: ${currentStyle.fonts[1].weight};
+}`;
+            copyToClipboard(css);
+        }
+
+        function copyColors() {
+            const colors = currentStyle.colors.join(', ');
+            copyToClipboard(colors);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #48BB78;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+
+        // Export functions
+        function exportCSS() {
+            const css = `
+/* Brand Style Guide - CSS Variables */
+:root {
+  /* Colors */
+  --color-primary: ${currentStyle.colors[0]};
+  --color-secondary: ${currentStyle.colors[1]};
+  --color-accent: ${currentStyle.colors[2]};
+  --color-light: ${currentStyle.colors[3]};
+  --color-background: ${currentStyle.colors[4]};
+  
+  /* Typography */
+  --font-heading: '${currentStyle.fonts[0].name}', sans-serif;
+  --font-body: '${currentStyle.fonts[1].name}', sans-serif;
+  --font-weight-heading: ${currentStyle.fonts[0].weight};
+  --font-weight-body: ${currentStyle.fonts[1].weight};
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-primary);
+  background-color: var(--color-background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+`;
+            downloadFile('brand-style-guide.css', css, 'text/css');
+        }
+
+        function exportSass() {
+            const scss = `
+// Brand Style Guide - SCSS Variables
+// Colors
+$color-primary: ${currentStyle.colors[0]};
+$color-secondary: ${currentStyle.colors[1]};
+$color-accent: ${currentStyle.colors[2]};
+$color-light: ${currentStyle.colors[3]};
+$color-background: ${currentStyle.colors[4]};
+
+// Typography
+$font-heading: '${currentStyle.fonts[0].name}', sans-serif;
+$font-body: '${currentStyle.fonts[1].name}', sans-serif;
+$font-weight-heading: ${currentStyle.fonts[0].weight};
+$font-weight-body: ${currentStyle.fonts[1].weight};
+
+// Spacing Scale
+$spacing: (
+  xs: 0.5rem,
+  sm: 1rem,
+  md: 1.5rem,
+  lg: 2rem,
+  xl: 3rem,
+  xxl: 4rem
+);
+
+// Border Radius
+$radius: (
+  sm: 4px,
+  md: 8px,
+  lg: 12px,
+  xl: 16px
+);
+
+// Mixins
+@mixin button-style($bg-color: $color-accent, $text-color: white) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  padding: map-get($spacing, sm) map-get($spacing, md);
+  border-radius: map-get($radius, md);
+  font-family: $font-body;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@mixin heading-style {
+  font-family: $font-heading;
+  font-weight: $font-weight-heading;
+  color: $color-primary;
+}
+
+// Base Styles
+body {
+  font-family: $font-body;
+  font-weight: $font-weight-body;
+  color: $color-primary;
+  background-color: $color-background;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include heading-style;
+}
+
+.btn-primary {
+  @include button-style;
+}
+`;
+            downloadFile('brand-style-guide.scss', scss, 'text/scss');
+        }
+
+        function exportJSON() {
+            const config = {
+                brandName: "Your Brand",
+                colors: {
+                    primary: currentStyle.colors[0],
+                    secondary: currentStyle.colors[1],
+                    accent: currentStyle.colors[2],
+                    light: currentStyle.colors[3],
+                    background: currentStyle.colors[4]
+                },
+                typography: {
+                    heading: {
+                        family: currentStyle.fonts[0].name,
+                        weight: currentStyle.fonts[0].weight,
+                        usage: currentStyle.fonts[0].usage
+                    },
+                    body: {
+                        family: currentStyle.fonts[1].name,
+                        weight: currentStyle.fonts[1].weight,
+                        usage: currentStyle.fonts[1].usage
+                    }
+                },
+                spacing: {
+                    xs: "0.5rem",
+                    sm: "1rem",
+                    md: "1.5rem",
+                    lg: "2rem",
+                    xl: "3rem"
+                },
+                borderRadius: {
+                    sm: "4px",
+                    md: "8px",
+                    lg: "12px",
+                    xl: "16px"
+                },
+                heroStyle: currentStyle.heroStyle,
+                brandPersonality: document.querySelector('.vibe-btn.active')?.textContent || "Custom",
+                generatedAt: new Date().toISOString()
+            };
+            
+            downloadFile('brand-config.json', JSON.stringify(config, null, 2), 'application/json');
+        }
+
+        function exportSketch() {
+            const designTokens = `
+# Brand Design Tokens
+Generated on: ${new Date().toLocaleDateString()}
+
+## Color Palette
+Primary: ${currentStyle.colors[0]}
+Secondary: ${currentStyle.colors[1]}
+Accent: ${currentStyle.colors[2]}
+Light: ${currentStyle.colors[3]}
+Background: ${currentStyle.colors[4]}
+
+## Typography
+Heading Font: ${currentStyle.fonts[0].name} (${currentStyle.fonts[0].weight})
+Body Font: ${currentStyle.fonts[1].name} (${currentStyle.fonts[1].weight})
+
+## Font Scale
+- H1: 3rem (48px)
+- H2: 2.5rem (40px)
+- H3: 2rem (32px)
+- H4: 1.5rem (24px)
+- H5: 1.25rem (20px)
+- H6: 1rem (16px)
+- Body: 1rem (16px)
+- Small: 0.875rem (14px)
+
+## Spacing Scale
+- XS: 8px
+- SM: 16px
+- MD: 24px
+- LG: 32px
+- XL: 48px
+- XXL: 64px
+
+## Border Radius
+- Small: 4px
+- Medium: 8px
+- Large: 12px
+- X-Large: 16px
+
+## Shadows
+- Light: 0 1px 3px rgba(0, 0, 0, 0.1)
+- Medium: 0 4px 12px rgba(0, 0, 0, 0.15)
+- Heavy: 0 8px 25px rgba(0, 0, 0, 0.2)
+
+## Brand Guidelines
+- Always maintain proper contrast ratios (4.5:1 minimum)
+- Use primary color for main CTAs and important elements
+- Use accent color sparingly for highlights and secondary actions
+- Maintain consistent spacing using the defined scale
+- Keep typography hierarchy clear and scannable
+`;
+            downloadFile('design-tokens.txt', designTokens, 'text/plain');
+        }
+
+        function downloadFile(filename, content, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Downloaded ${filename}`);
+        }
+
+        // Add keyframe animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Auto-generate on page load for demo
+        setTimeout(() => {
+            document.querySelector('[data-vibe="techy-elegant"]').click();
+        }, 500);
+
+        // Add advanced features
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'g' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                document.getElementById('generateBtn').click();
+            }
+        });
+
+        // Add color accessibility checker
+        function checkColorContrast(color1, color2) {
+            // Simple contrast ratio calculation
+            const getLuminance = (color) => {
+                const rgb = parseInt(color.slice(1), 16);
+                const r = (rgb >> 16) & 0xff;
+                const g = (rgb >> 8) & 0xff;
+                const b = (rgb >> 0) & 0xff;
+                
+                const rsRGB = r / 255;
+                const gsRGB = g / 255;
+                const bsRGB = b / 255;
+                
+                const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+                const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+                const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+                
+                return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+            };
+            
+            const l1 = getLuminance(color1);
+            const l2 = getLuminance(color2);
+            const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            
+            return contrast;
+        }
+
+        // Performance optimization for animations
+        let ticking = false;
+        function updateAnimation() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        // Initialize tooltips
+        function initTooltips() {
+            const tooltips = document.querySelectorAll('[data-tooltip]');
+            tooltips.forEach(element => {
+                element.addEventListener('mouseenter', showTooltip);
+                element.addEventListener('mouseleave', hideTooltip);
+            });
+        }
+
+        function showTooltip(e) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = e.target.dataset.tooltip;
+            tooltip.style.cssText = `
+                position: absolute;
+                background: #1a202c;
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                white-space: nowrap;
+                z-index: 1000;
+                pointer-events: none;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.2s ease;
+            `;
+            document.body.appendChild(tooltip);
+            
+            const rect = e.target.getBoundingClientRect();
+            tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+            tooltip.style.top = rect.top - tooltip.offsetHeight - 8 + 'px';
+            
+            setTimeout(() => {
+                tooltip.style.opacity = '1';
+                tooltip.style.transform = 'translateY(0)';
+            }, 10);
+            
+            e.target.tooltip = tooltip;
+        }
+
+        function hideTooltip(e) {
+            if (e.target.tooltip) {
+                e.target.tooltip.remove();
+                delete e.target.tooltip;
+            }
+        }
+
+        // Initialize advanced features
+        document.addEventListener('DOMContentLoaded', function() {
+            initTooltips();
+            
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Add focus management for accessibility
+            const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            const modal = document.getElementById('results');
+            
+            if (modal) {
+                const firstFocusable = modal.querySelectorAll(focusableElements)[0];
+                const focusables = modal.querySelectorAll(focusableElements);
+                const lastFocusable = focusables[focusables.length - 1];
+                
+                modal.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                lastFocusable.focus();
+                                e.preventDefault();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                firstFocusable.focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        console.log('🎨 Brand Style Generator v2.0 - Loaded Successfully!');
+        console.log('💡 Tip: Press Ctrl/Cmd + G to quickly generate a new style');
+    </script>
+</body>
+</html>
