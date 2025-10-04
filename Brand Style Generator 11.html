@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Style Generator - Professional Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto+Mono:wght@400;500&family=Poppins:wght@300;400;500;600&family=Merriweather:wght@300;400;700&family=Lato:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            min-height: 100vh;
+            align-items: start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 1px 0 rgba(255, 255, 255, 0.8) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .control-panel:hover {
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 1px 0 rgba(255, 255, 255, 0.9) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+            transform: translateY(-2px);
+        }
+
+        .preview-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 1px 0 rgba(255, 255, 255, 0.8) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .preview-panel:hover {
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 1px 0 rgba(255, 255, 255, 0.9) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vibe-btn {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4a5568;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .vibe-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transition: left 0.5s;
+        }
+
+        .vibe-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        .vibe-btn:hover::before {
+            left: 100%;
+        }
+
+        .vibe-btn:hover::after {
+            width: 200%;
+            height: 200%;
+        }
+
+        .vibe-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .vibe-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(102, 126, 234, 0.4),
+                0 0 0 1px rgba(102, 126, 234, 0.2);
+        }
+
+        .vibe-btn.active::after {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .vibe-btn * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #f7fafc;
+            color: #2d3748;
+            position: relative;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 
+                0 0 0 3px rgba(102, 126, 234, 0.1),
+                0 4px 12px rgba(102, 126, 234, 0.15);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .custom-input::placeholder {
+            color: #a0aec0;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input:focus::placeholder {
+            opacity: 0.7;
+            transform: translateY(-2px);
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(102, 126, 234, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            transition: all 0.1s ease;
+        }
+
+        .generate-btn.loading {
+            pointer-events: none;
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            }
+            50% { 
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            }
+        }
+
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .result-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .result-section:hover::before {
+            opacity: 1;
+        }
+
+        .result-section:hover {
+            box-shadow: 
+                0 12px 30px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(102, 126, 234, 0.05);
+            transform: translateY(-2px);
+            border-left-color: #5a67d8;
+        }
+
+        .result-section * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            gap: 0.5rem;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .copy-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+            transition: all 0.1s ease;
+        }
+
+        .copy-btn.copied {
+            background: #48bb78;
+            animation: copy-success 0.6s ease;
+        }
+
+        @keyframes copy-success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .font-preview {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .font-item {
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .font-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.02), rgba(118, 75, 162, 0.02));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .font-item:hover::before {
+            opacity: 1;
+        }
+
+        .font-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .font-item * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .font-sample {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .font-item:hover .font-sample {
+            color: #667eea;
+            transform: translateX(2px);
+        }
+
+        .font-name {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .font-usage {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            font-style: italic;
+            transition: all 0.3s ease;
+        }
+
+        .font-item:hover .font-name {
+            color: #4a5568;
+        }
+
+        .font-item:hover .font-usage {
+            color: #718096;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .color-item {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .color-item::before {
+            content: 'Click to copy';
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .color-item:hover::before {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .color-item:hover {
+            transform: translateY(-8px) scale(1.05);
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            border: 3px solid white;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                0 1px 0 rgba(255, 255, 255, 0.8) inset;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .color-item:hover .color-swatch::after {
+            opacity: 1;
+        }
+
+        .color-item:hover .color-swatch {
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.2),
+                0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .color-item.copied .color-swatch {
+            animation: color-copied 0.6s ease;
+        }
+
+        @keyframes color-copied {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); border-color: #48bb78; }
+            100% { transform: scale(1); }
+        }
+
+        .color-code {
+            font-size: 0.75rem;
+            font-family: 'Roboto Mono', monospace;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .hero-preview {
+            background: var(--bg-color, #ffffff);
+            color: var(--text-color, #2d3748);
+            border-radius: 16px;
+            padding: 4rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .hero-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-pattern, none);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            background: var(--accent-color, #667eea);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .export-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .export-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .export-btn {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            font-size: 0.9rem;
+            color: #4a5568;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .export-btn:hover::before {
+            opacity: 1;
+        }
+
+        .export-btn:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            color: #2d3748;
+        }
+
+        .export-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            transition: all 0.1s ease;
+        }
+
+        .export-btn i {
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .export-btn:hover i {
+            color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .inspiration-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 16px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .inspiration-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+
+        .inspiration-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+
+        .inspiration-section:hover::before {
+            transform: translate(-10px, 10px) scale(1.2);
+        }
+
+        .inspiration-section:hover::after {
+            transform: translate(10px, -10px) scale(1.3);
+        }
+
+        .inspiration-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(240, 147, 251, 0.3);
+        }
+
+        .inspiration-section * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .inspiration-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .inspiration-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .control-panel {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .vibe-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stagger-animation .result-section:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-animation .result-section:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-animation .result-section:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-animation .result-section:nth-child(4) { animation-delay: 0.4s; }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Advanced micro-interactions */
+        .micro-bounce {
+            animation: micro-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes micro-bounce {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* Scroll-triggered animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Enhanced focus states for accessibility */
+        .vibe-btn:focus,
+        .custom-input:focus,
+        .generate-btn:focus,
+        .copy-btn:focus,
+        .export-btn:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* Loading skeleton animation */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading-skeleton 2s infinite;
+        }
+
+        @keyframes loading-skeleton {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Success checkmark animation */
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            stroke-width: 2;
+            stroke: #48bb78;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px #48bb78;
+            animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #48bb78;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+
+        @keyframes fill {
+            100% { box-shadow: inset 0px 0px 0px 30px #48bb78; }
+        }
+
+        /* Glassmorphism enhancement */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Particle effect for background */
+        .particle {
+            position: fixed;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: float-particle 6s linear infinite;
+        }
+
+        @keyframes float-particle {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(0deg);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+        .hero-preview {
+            background: var(--bg-color, #ffffff);
+            color: var(--text-color, #2d3748);
+            border-radius: 16px;
+            padding: 4rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-pattern, none);
+            opacity: 0.1;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .hero-preview:hover::before {
+            opacity: 0.15;
+        }
+
+        .hero-preview:hover {
+            transform: scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .hero-preview:hover .hero-content {
+            transform: translateY(-2px);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            transition: all 0.3s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta {
+            background: var(--accent-color, #667eea);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+            display: inline-block;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* animated background "wave" on hover */
+        .hero-cta::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0)
+            );
+            transform: skewX(-25deg);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        /* hover effect */
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .hero-cta:hover::before {
+            left: 200%;
+        }
+
+        /* focus + active states for accessibility */
+        .hero-cta:focus {
+            outline: 2px solid rgba(102, 126, 234, 0.6);
+            outline-offset: 4px;
+        }
+
+        .hero-cta:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="control-panel">
+            <h1><i class="fas fa-palette"></i> Brand Style Generator</h1>
+            <p class="subtitle">Create professional brand guidelines in seconds with AI-powered design intelligence</p>
+
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Brand Personality
+                </div>
+                <div class="vibe-grid">
+                    <div class="vibe-btn" data-vibe="modern-minimal">Modern & Minimal</div>
+                    <div class="vibe-btn" data-vibe="techy-elegant">Techy & Elegant</div>
+                    <div class="vibe-btn" data-vibe="bold-creative">Bold & Creative</div>
+                    <div class="vibe-btn" data-vibe="corporate-trustworthy">Corporate & Trustworthy</div>
+                    <div class="vibe-btn" data-vibe="playful-friendly">Playful & Friendly</div>
+                    <div class="vibe-btn" data-vibe="luxury-sophisticated">Luxury & Sophisticated</div>
+                    <div class="vibe-btn" data-vibe="eco-natural">Eco & Natural</div>
+                    <div class="vibe-btn" data-vibe="retro-vintage">Retro & Vintage</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-edit"></i>
+                    Custom Description (Optional)
+                </div>
+                <input type="text" class="custom-input" id="customVibe" placeholder="e.g., Innovative healthcare startup with a human touch...">
+            </div>
+
+            <button class="generate-btn" id="generateBtn">
+                <i class="fas fa-magic"></i> Generate Brand Style
+            </button>
+
+            <div class="inspiration-section">
+                <div class="inspiration-title">💡 Pro Tip</div>
+                <div class="inspiration-text">
+                    Great brands combine emotional appeal with functional clarity. Consider how your color choices affect user behavior and accessibility.
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div id="results" style="display: none;">
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-font"></i> Typography Pairing
+                        <button class="copy-btn" onclick="copyFonts()">Copy CSS</button>
+                    </div>
+                    <div class="font-preview" id="fontPreview"></div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-palette"></i> Color Palette
+                        <button class="copy-btn" onclick="copyColors()">Copy Hex</button>
+                    </div>
+                    <div class="color-palette" id="colorPalette"></div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-title">
+                        <i class="fas fa-desktop"></i> Hero Section Preview
+                    </div>
+                    <div class="hero-preview" id="heroPreview">
+                        <div class="hero-content">
+                            <h2 class="hero-title" id="heroTitle">Your Brand Story Starts Here</h2>
+                            <p class="hero-subtitle" id="heroSubtitle">Crafting exceptional experiences that resonate with your audience and drive meaningful connections.</p>
+                            <button class="hero-cta">Get Started Today</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-section">
+                    <div class="section-title">
+                        <i class="fas fa-download"></i> Export Options
+                    </div>
+                    <div class="export-grid">
+                        <button class="export-btn" onclick="exportCSS()">
+                            <i class="fab fa-css3-alt"></i><br>CSS Variables
+                        </button>
+                        <button class="export-btn" onclick="exportSass()">
+                            <i class="fab fa-sass"></i><br>SCSS File
+                        </button>
+                        <button class="export-btn" onclick="exportJSON()">
+                            <i class="fas fa-file-code"></i><br>JSON Config
+                        </button>
+                        <button class="export-btn" onclick="exportSketch()">
+                            <i class="fas fa-paint-brush"></i><br>Design Tokens
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        #placeholder {
+            text-align: center; 
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border: 2px dashed #cbd5e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: placeholder-shimmer 3s infinite;
+        }
+
+        @keyframes placeholder-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        #placeholder i {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #placeholder * {
+            position: relative;
+            z-index: 1;
+        }
+                <i class="fas fa-rocket" style="font-size: 3rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
+                <h3 style="color: #718096; margin-bottom: 1rem;">Ready to Create Something Amazing?</h3>
+                <p style="color: #a0aec0;">Select a brand personality and watch the magic happen. Our AI will generate a complete brand style guide tailored to your vision.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Brand style configurations
+        const brandStyles = {
+            'modern-minimal': {
+                fonts: [
+                    { name: 'Inter', usage: 'Headings & UI', weight: '600' },
+                    { name: 'Lato', usage: 'Body text & content', weight: '400' }
+                ],
+                colors: ['#2D3748', '#4A5568', '#718096', '#E2E8F0', '#F7FAFC'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                    textColor: '#2D3748',
+                    accentColor: '#4A5568'
+                },
+                title: 'Simplicity Meets Innovation',
+                subtitle: 'Clean, purposeful design that speaks volumes through restraint and precision.'
+            },
+            'techy-elegant': {
+                fonts: [
+                    { name: 'Poppins', usage: 'Modern headings', weight: '600' },
+                    { name: 'Roboto Mono', usage: 'Code & technical content', weight: '400' }
+                ],
+                colors: ['#1A202C', '#2D3748', '#667EEA', '#764BA2', '#E2E8F0'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#ffffff'
+                },
+                title: 'Technology Refined',
+                subtitle: 'Where cutting-edge innovation meets sophisticated design aesthetics.'
+            },
+            'bold-creative': {
+                fonts: [
+                    { name: 'Playfair Display', usage: 'Dramatic headlines', weight: '700' },
+                    { name: 'Inter', usage: 'Supporting content', weight: '400' }
+                ],
+                colors: ['#E53E3E', '#DD6B20', '#D69E2E', '#38A169', '#3182CE'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#ffffff'
+                },
+                title: 'Dare to Be Different',
+                subtitle: 'Bold expressions that break boundaries and capture attention in every moment.'
+            },
+            'corporate-trustworthy': {
+                fonts: [
+                    { name: 'Merriweather', usage: 'Professional headings', weight: '700' },
+                    { name: 'Lato', usage: 'Business content', weight: '400' }
+                ],
+                colors: ['#2C5282', '#3182CE', '#63B3ED', '#BEE3F8', '#EBF8FF'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #2c5282 0%, #3182ce 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#63B3ED'
+                },
+                title: 'Built on Trust',
+                subtitle: 'Reliable expertise and proven results that inspire confidence in every interaction.'
+            },
+            'playful-friendly': {
+                fonts: [
+                    { name: 'Poppins', usage: 'Friendly headings', weight: '600' },
+                    { name: 'Inter', usage: 'Approachable content', weight: '400' }
+                ],
+                colors: ['#FF6B9D', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #ff6b9d 0%, #4ecdc4 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#ffffff'
+                },
+                title: 'Joy in Every Detail',
+                subtitle: 'Bringing smiles and positive energy to every touchpoint of your experience.'
+            },
+            'luxury-sophisticated': {
+                fonts: [
+                    { name: 'Playfair Display', usage: 'Elegant headings', weight: '600' },
+                    { name: 'Lato', usage: 'Refined content', weight: '300' }
+                ],
+                colors: ['#1A1A1A', '#8B7355', '#D4AF37', '#F5F5DC', '#FFFFFF'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #8b7355 100%)',
+                    textColor: '#f5f5dc',
+                    accentColor: '#d4af37'
+                },
+                title: 'Exquisite by Nature',
+                subtitle: 'Timeless elegance and uncompromising quality define every aspect of our craft.'
+            },
+            'eco-natural': {
+                fonts: [
+                    { name: 'Merriweather', usage: 'Organic headings', weight: '400' },
+                    { name: 'Lato', usage: 'Natural content', weight: '400' }
+                ],
+                colors: ['#22543D', '#38A169', '#68D391', '#C6F6D5', '#F0FFF4'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #22543d 0%, #38a169 100%)',
+                    textColor: '#ffffff',
+                    accentColor: '#68D391'
+                },
+                title: 'Naturally Inspired',
+                subtitle: 'Sustainable solutions that honor our planet while nurturing future generations.'
+            },
+            'retro-vintage': {
+                fonts: [
+                    { name: 'Playfair Display', usage: 'Vintage headings', weight: '700' },
+                    { name: 'Merriweather', usage: 'Classic content', weight: '400' }
+                ],
+                colors: ['#8B4513', '#D2691E', '#F4A460', '#FFDAB9', '#FFF8DC'],
+                heroStyle: {
+                    background: 'linear-gradient(135deg, #8b4513 0%, #d2691e 100%)',
+                    textColor: '#fff8dc',
+                    accentColor: '#ffdab9'
+                },
+                title: 'Timeless Character',
+                subtitle: 'Classic aesthetics meet modern sensibilities in a celebration of enduring style.'
+            }
+        };
+
+        let currentStyle = null;
+        let generatedColors = [];
+        let generatedFonts = [];
+
+        // Vibe selection handling
+        document.querySelectorAll('.vibe-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.vibe-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Generate brand style with enhanced animations
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const activeVibe = document.querySelector('.vibe-btn.active');
+            const customVibe = document.getElementById('customVibe').value;
+            
+            if (!activeVibe && !customVibe) {
+                showToast('Please select a brand personality or enter a custom description.', 'error');
+                this.classList.add('micro-bounce');
+                setTimeout(() => this.classList.remove('micro-bounce'), 600);
+                return;
+            }
+
+            // Enhanced loading animation
+            this.classList.add('loading');
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Magic...';
+            
+            // Add loading skeleton to preview
+            const preview = document.getElementById('placeholder');
+            preview.classList.add('skeleton');
+            
+            setTimeout(() => {
+                const vibeKey = activeVibe ? activeVibe.dataset.vibe : 'modern-minimal';
+                currentStyle = brandStyles[vibeKey] || brandStyles['modern-minimal'];
+                
+                // If custom vibe, modify the style slightly
+                if (customVibe) {
+                    customizeStyleBasedOnInput(customVibe);
+                }
+                
+                generateResults();
+                
+                // Reset button with enhanced animation
+                this.classList.remove('loading');
+                this.innerHTML = '<i class="fas fa-magic"></i> Generate Brand Style';
+                
+                // Show results with staggered animation
+                document.getElementById('placeholder').style.display = 'none';
+                const results = document.getElementById('results');
+                results.style.display = 'block';
+                results.classList.add('fade-in', 'stagger-animation');
+                
+                // Create floating particles
+                createFloatingParticles();
+                
+                showToast('Brand style generated successfully!');
+            }, 2000);
+        });
+
+        function customizeStyleBasedOnInput(input) {
+            const keywords = input.toLowerCase();
+            
+            // Modify colors based on keywords
+            if (keywords.includes('blue') || keywords.includes('tech')) {
+                currentStyle.colors = ['#1E3A8A', '#3B82F6', '#60A5FA', '#DBEAFE', '#EFF6FF'];
+            } else if (keywords.includes('green') || keywords.includes('eco')) {
+                currentStyle.colors = ['#14532D', '#16A34A', '#4ADE80', '#DCFCE7', '#F0FDF4'];
+            } else if (keywords.includes('red') || keywords.includes('bold')) {
+                currentStyle.colors = ['#991B1B', '#DC2626', '#F87171', '#FECACA', '#FEF2F2'];
+            }
+            
+            // Modify fonts based on keywords
+            if (keywords.includes('modern') || keywords.includes('clean')) {
+                currentStyle.fonts = [
+                    { name: 'Inter', usage: 'Modern headings', weight: '600' },
+                    { name: 'Lato', usage: 'Clean content', weight: '400' }
+                ];
+            } else if (keywords.includes('elegant') || keywords.includes('luxury')) {
+                currentStyle.fonts = [
+                    { name: 'Playfair Display', usage: 'Elegant headings', weight: '600' },
+                    { name: 'Lato', usage: 'Refined content', weight: '300' }
+                ];
+            }
+        }
+
+        function generateResults() {
+            generateFontPreview();
+            generateColorPalette();
+            generateHeroPreview();
+            generatedColors = [...currentStyle.colors];
+            generatedFonts = [...currentStyle.fonts];
+        }
+
+        function generateFontPreview() {
+            const container = document.getElementById('fontPreview');
+            container.innerHTML = '';
+            
+            currentStyle.fonts.forEach(font => {
+                const fontItem = document.createElement('div');
+                fontItem.className = 'font-item';
+                fontItem.innerHTML = `
+                    <div class="font-name">${font.name} - ${font.weight}</div>
+                    <div class="font-sample" style="font-family: '${font.name}', sans-serif; font-weight: ${font.weight}">
+                        The quick brown fox jumps over the lazy dog
+                    </div>
+                    <div class="font-usage">${font.usage}</div>
+                `;
+                container.appendChild(fontItem);
+            });
+        }
+
+        // Enhanced color interaction with better visual feedback
+        function generateColorPalette() {
+            const container = document.getElementById('colorPalette');
+            container.innerHTML = '';
+            
+            currentStyle.colors.forEach((color, index) => {
+                const colorItem = document.createElement('div');
+                colorItem.className = 'color-item';
+                colorItem.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${color}"></div>
+                    <div class="color-code">${color}</div>
+                `;
+                colorItem.addEventListener('click', (e) => {
+                    copyToClipboard(color);
+                    colorItem.classList.add('copied');
+                    setTimeout(() => colorItem.classList.remove('copied'), 600);
+                });
+                container.appendChild(colorItem);
+            });
+        }
+
+        function generateHeroPreview() {
+            const hero = document.getElementById('heroPreview');
+            const title = document.getElementById('heroTitle');
+            const subtitle = document.getElementById('heroSubtitle');
+            
+            // Apply styles
+            hero.style.background = currentStyle.heroStyle.background;
+            hero.style.color = currentStyle.heroStyle.textColor;
+            hero.style.setProperty('--accent-color', currentStyle.heroStyle.accentColor);
+            
+            // Update content
+            title.textContent = currentStyle.title;
+            subtitle.textContent = currentStyle.subtitle;
+            
+            // Apply fonts
+            title.style.fontFamily = `'${currentStyle.fonts[0].name}', sans-serif`;
+            subtitle.style.fontFamily = `'${currentStyle.fonts[1].name}', sans-serif`;
+        }
+
+        // Enhanced copy functions with better feedback
+        function copyFonts() {
+            const css = `
+/* Typography */
+:root {
+  --font-heading: '${currentStyle.fonts[0].name}', sans-serif;
+  --font-body: '${currentStyle.fonts[1].name}', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: ${currentStyle.fonts[0].weight};
+}
+
+body, p, span, div {
+  font-family: var(--font-body);
+  font-weight: ${currentStyle.fonts[1].weight};
+}`;
+            copyToClipboard(css);
+            
+            // Add visual feedback
+            const btn = event.target;
+            btn.classList.add('copied');
+            btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = 'Copy CSS';
+            }, 2000);
+        }
+
+        function copyColors() {
+            const colors = currentStyle.colors.join(', ');
+            copyToClipboard(colors);
+            
+            // Add visual feedback
+            const btn = event.target;
+            btn.classList.add('copied');
+            btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = 'Copy Hex';
+            }, 2000);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!');
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? '#48BB78' : '#F56565';
+            const icon = type === 'success' ? '✓' : '!';
+            
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                font-weight: 500;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1), slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) 2.7s forwards;
+            `;
+            
+            toast.innerHTML = `
+                <span style="font-size: 1.2rem;">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Add enhanced animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            setTimeout(() => {
+                toast.remove();
+                style.remove();
+            }, 3000);
+        }
+
+        // Export functions
+        function exportCSS() {
+            const css = `
+/* Brand Style Guide - CSS Variables */
+:root {
+  /* Colors */
+  --color-primary: ${currentStyle.colors[0]};
+  --color-secondary: ${currentStyle.colors[1]};
+  --color-accent: ${currentStyle.colors[2]};
+  --color-light: ${currentStyle.colors[3]};
+  --color-background: ${currentStyle.colors[4]};
+  
+  /* Typography */
+  --font-heading: '${currentStyle.fonts[0].name}', sans-serif;
+  --font-body: '${currentStyle.fonts[1].name}', sans-serif;
+  --font-weight-heading: ${currentStyle.fonts[0].weight};
+  --font-weight-body: ${currentStyle.fonts[1].weight};
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-primary);
+  background-color: var(--color-background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  color: var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+`;
+            downloadFile('brand-style-guide.css', css, 'text/css');
+        }
+
+        function exportSass() {
+            const scss = `
+// Brand Style Guide - SCSS Variables
+// Colors
+$color-primary: ${currentStyle.colors[0]};
+$color-secondary: ${currentStyle.colors[1]};
+$color-accent: ${currentStyle.colors[2]};
+$color-light: ${currentStyle.colors[3]};
+$color-background: ${currentStyle.colors[4]};
+
+// Typography
+$font-heading: '${currentStyle.fonts[0].name}', sans-serif;
+$font-body: '${currentStyle.fonts[1].name}', sans-serif;
+$font-weight-heading: ${currentStyle.fonts[0].weight};
+$font-weight-body: ${currentStyle.fonts[1].weight};
+
+// Spacing Scale
+$spacing: (
+  xs: 0.5rem,
+  sm: 1rem,
+  md: 1.5rem,
+  lg: 2rem,
+  xl: 3rem,
+  xxl: 4rem
+);
+
+// Border Radius
+$radius: (
+  sm: 4px,
+  md: 8px,
+  lg: 12px,
+  xl: 16px
+);
+
+// Mixins
+@mixin button-style($bg-color: $color-accent, $text-color: white) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  padding: map-get($spacing, sm) map-get($spacing, md);
+  border-radius: map-get($radius, md);
+  font-family: $font-body;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@mixin heading-style {
+  font-family: $font-heading;
+  font-weight: $font-weight-heading;
+  color: $color-primary;
+}
+
+// Base Styles
+body {
+  font-family: $font-body;
+  font-weight: $font-weight-body;
+  color: $color-primary;
+  background-color: $color-background;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include heading-style;
+}
+
+.btn-primary {
+  @include button-style;
+}
+`;
+            downloadFile('brand-style-guide.scss', scss, 'text/scss');
+        }
+
+        function exportJSON() {
+            const config = {
+                brandName: "Your Brand",
+                colors: {
+                    primary: currentStyle.colors[0],
+                    secondary: currentStyle.colors[1],
+                    accent: currentStyle.colors[2],
+                    light: currentStyle.colors[3],
+                    background: currentStyle.colors[4]
+                },
+                typography: {
+                    heading: {
+                        family: currentStyle.fonts[0].name,
+                        weight: currentStyle.fonts[0].weight,
+                        usage: currentStyle.fonts[0].usage
+                    },
+                    body: {
+                        family: currentStyle.fonts[1].name,
+                        weight: currentStyle.fonts[1].weight,
+                        usage: currentStyle.fonts[1].usage
+                    }
+                },
+                spacing: {
+                    xs: "0.5rem",
+                    sm: "1rem",
+                    md: "1.5rem",
+                    lg: "2rem",
+                    xl: "3rem"
+                },
+                borderRadius: {
+                    sm: "4px",
+                    md: "8px",
+                    lg: "12px",
+                    xl: "16px"
+                },
+                heroStyle: currentStyle.heroStyle,
+                brandPersonality: document.querySelector('.vibe-btn.active')?.textContent || "Custom",
+                generatedAt: new Date().toISOString()
+            };
+            
+            downloadFile('brand-config.json', JSON.stringify(config, null, 2), 'application/json');
+        }
+
+        function exportSketch() {
+            const designTokens = `
+# Brand Design Tokens
+Generated on: ${new Date().toLocaleDateString()}
+
+## Color Palette
+Primary: ${currentStyle.colors[0]}
+Secondary: ${currentStyle.colors[1]}
+Accent: ${currentStyle.colors[2]}
+Light: ${currentStyle.colors[3]}
+Background: ${currentStyle.colors[4]}
+
+## Typography
+Heading Font: ${currentStyle.fonts[0].name} (${currentStyle.fonts[0].weight})
+Body Font: ${currentStyle.fonts[1].name} (${currentStyle.fonts[1].weight})
+
+## Font Scale
+- H1: 3rem (48px)
+- H2: 2.5rem (40px)
+- H3: 2rem (32px)
+- H4: 1.5rem (24px)
+- H5: 1.25rem (20px)
+- H6: 1rem (16px)
+- Body: 1rem (16px)
+- Small: 0.875rem (14px)
+
+## Spacing Scale
+- XS: 8px
+- SM: 16px
+- MD: 24px
+- LG: 32px
+- XL: 48px
+- XXL: 64px
+
+## Border Radius
+- Small: 4px
+- Medium: 8px
+- Large: 12px
+- X-Large: 16px
+
+## Shadows
+- Light: 0 1px 3px rgba(0, 0, 0, 0.1)
+- Medium: 0 4px 12px rgba(0, 0, 0, 0.15)
+- Heavy: 0 8px 25px rgba(0, 0, 0, 0.2)
+
+## Brand Guidelines
+- Always maintain proper contrast ratios (4.5:1 minimum)
+- Use primary color for main CTAs and important elements
+- Use accent color sparingly for highlights and secondary actions
+- Maintain consistent spacing using the defined scale
+- Keep typography hierarchy clear and scannable
+`;
+            downloadFile('design-tokens.txt', designTokens, 'text/plain');
+        }
+
+        function downloadFile(filename, content, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Downloaded ${filename}`);
+        }
+
+        // Add keyframe animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Auto-generate on page load for demo
+        setTimeout(() => {
+            document.querySelector('[data-vibe="techy-elegant"]').click();
+        }, 500);
+
+        // Add advanced features
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'g' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                document.getElementById('generateBtn').click();
+            }
+        });
+
+        // Add color accessibility checker
+        function checkColorContrast(color1, color2) {
+            // Simple contrast ratio calculation
+            const getLuminance = (color) => {
+                const rgb = parseInt(color.slice(1), 16);
+                const r = (rgb >> 16) & 0xff;
+                const g = (rgb >> 8) & 0xff;
+                const b = (rgb >> 0) & 0xff;
+                
+                const rsRGB = r / 255;
+                const gsRGB = g / 255;
+                const bsRGB = b / 255;
+                
+                const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+                const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+                const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+                
+                return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+            };
+            
+            const l1 = getLuminance(color1);
+            const l2 = getLuminance(color2);
+            const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            
+            return contrast;
+        }
+
+        // Performance optimization for animations
+        let ticking = false;
+        function updateAnimation() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        // Initialize tooltips
+        function initTooltips() {
+            const tooltips = document.querySelectorAll('[data-tooltip]');
+            tooltips.forEach(element => {
+                element.addEventListener('mouseenter', showTooltip);
+                element.addEventListener('mouseleave', hideTooltip);
+            });
+        }
+
+        function showTooltip(e) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = e.target.dataset.tooltip;
+            tooltip.style.cssText = `
+                position: absolute;
+                background: #1a202c;
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                white-space: nowrap;
+                z-index: 1000;
+                pointer-events: none;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.2s ease;
+            `;
+            document.body.appendChild(tooltip);
+            
+            const rect = e.target.getBoundingClientRect();
+            tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+            tooltip.style.top = rect.top - tooltip.offsetHeight - 8 + 'px';
+            
+            setTimeout(() => {
+                tooltip.style.opacity = '1';
+                tooltip.style.transform = 'translateY(0)';
+            }, 10);
+            
+            e.target.tooltip = tooltip;
+        }
+
+        function hideTooltip(e) {
+            if (e.target.tooltip) {
+                e.target.tooltip.remove();
+                delete e.target.tooltip;
+            }
+        }
+
+        // Add floating particles effect
+        function createFloatingParticles() {
+            const colors = currentStyle.colors;
+            
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.cssText = `
+                        width: ${Math.random() * 8 + 4}px;
+                        height: ${Math.random() * 8 + 4}px;
+                        left: ${Math.random() * 100}vw;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        animation-delay: ${Math.random() * 3}s;
+                        animation-duration: ${Math.random() * 3 + 4}s;
+                    `;
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 7000);
+                }, i * 500);
+            }
+        }
+
+        // Enhanced scroll reveal functionality
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Parallax scrolling effect
+        function initParallax() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.hero-preview');
+                if (parallax) {
+                    const speed = scrolled * 0.5;
+                    parallax.style.transform = `translateY(${speed}px)`;
+                }
+            });
+        }
+
+        // Advanced cursor interaction
+        function initAdvancedCursor() {
+            const cursor = document.createElement('div');
+            cursor.className = 'custom-cursor';
+            cursor.style.cssText = `
+                width: 20px;
+                height: 20px;
+                border: 2px solid #667eea;
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                mix-blend-mode: difference;
+                transition: all 0.1s ease;
+                opacity: 0;
+            `;
+            document.body.appendChild(cursor);
+
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursor.style.opacity = '1';
+            });
+
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+            });
+
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.1;
+                cursorY += (mouseY - cursorY) * 0.1;
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Enhance cursor on hover
+            document.querySelectorAll('button, .vibe-btn, .color-item').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'scale(1.5)';
+                    cursor.style.backgroundColor = 'rgba(102, 126, 234, 0.2)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'scale(1)';
+                    cursor.style.backgroundColor = 'transparent';
+                });
+            });
+        }
+            
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Add focus management for accessibility
+            const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            const modal = document.getElementById('results');
+            
+            if (modal) {
+                const firstFocusable = modal.querySelectorAll(focusableElements)[0];
+                const focusables = modal.querySelectorAll(focusableElements);
+                const lastFocusable = focusables[focusables.length - 1];
+                
+                modal.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                lastFocusable.focus();
+                                e.preventDefault();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                firstFocusable.focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                });
+            }
+        // Initialize advanced features
+        document.addEventListener('DOMContentLoaded', function() {
+            initTooltips();
+            initScrollReveal();
+            initParallax();
+            initAdvancedCursor();
+            
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Enhanced focus management for accessibility
+            const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+            const modal = document.getElementById('results');
+            
+            if (modal) {
+                const firstFocusable = modal.querySelectorAll(focusableElements)[0];
+                const focusables = modal.querySelectorAll(focusableElements);
+                const lastFocusable = focusables[focusables.length - 1];
+                
+                modal.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                lastFocusable.focus();
+                                e.preventDefault();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                firstFocusable.focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Add keyboard shortcuts with enhanced feedback
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'g' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    document.getElementById('generateBtn').click();
+                    showToast('Keyboard shortcut activated! 🚀');
+                }
+                
+                if (e.key === 'Escape') {
+                    // Clear active selections
+                    document.querySelectorAll('.vibe-btn.active').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.getElementById('customVibe').value = '';
+                }
+                
+                // Arrow key navigation for vibe buttons
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    const vibeButtons = Array.from(document.querySelectorAll('.vibe-btn'));
+                    const activeIndex = vibeButtons.findIndex(btn => btn.classList.contains('active'));
+                    
+                    if (activeIndex !== -1) {
+                        e.preventDefault();
+                        vibeButtons[activeIndex].classList.remove('active');
+                        
+                        let newIndex;
+                        if (e.key === 'ArrowRight') {
+                            newIndex = (activeIndex + 1) % vibeButtons.length;
+                        } else {
+                            newIndex = (activeIndex - 1 + vibeButtons.length) % vibeButtons.length;
+                        }
+                        
+                        vibeButtons[newIndex].classList.add('active');
+                        vibeButtons[newIndex].focus();
+                    }
+                }
+            });
+            
+            // Add resize handler for responsive adjustments
+            window.addEventListener('resize', debounce(() => {
+                // Recalculate layouts if needed
+                const container = document.querySelector('.container');
+                if (window.innerWidth <= 1024) {
+                    container.style.gridTemplateColumns = '1fr';
+                } else {
+                    container.style.gridTemplateColumns = '1fr 1fr';
+                }
+            }, 250));
+            
+            // Add performance monitoring
+            if ('performance' in window) {
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                        console.log(`🚀 App loaded in ${loadTime}ms`);
+                    }, 0);
+                });
+            }
+        });
+
+        // Utility function for debouncing
+        function debounce(func, wait, immediate) {
+            let timeout;
+            return function executedFunction() {
+                const context = this;
+                const args = arguments;
+                const later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                const callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        }
+
+        // Enhanced auto-demo with better timing
+        setTimeout(() => {
+            const techyBtn = document.querySelector('[data-vibe="techy-elegant"]');
+            if (techyBtn) {
+                techyBtn.classList.add('micro-bounce');
+                techyBtn.click();
+                setTimeout(() => {
+                    techyBtn.classList.remove('micro-bounce');
+                }, 600);
+            }
+        }, 1000);
+
+        // Add theme switching capability
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+            
+            if (isDark) {
+                body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Add performance optimizations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-viewport');
+                } else {
+                    entry.target.classList.remove('in-viewport');
+                }
+            });
+        });
+
+        document.querySelectorAll('.result-section, .vibe-btn').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Enhanced error handling
+        window.addEventListener('error', (e) => {
+            console.error('Application error:', e.error);
+            showToast('An error occurred. Please try again.', 'error');
+        });
+
+        // Service Worker registration for PWA capabilities
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        console.log('🎨 Brand Style Generator v3.0 - Enhanced UI/UX Loaded!');
+        console.log('✨ Features: Advanced animations, micro-interactions, accessibility');
+        console.log('⌨️  Shortcuts: Ctrl/Cmd + G (Generate), ESC (Clear), Arrow Keys (Navigate)');
+        console.log('🚀 Performance optimized with lazy loading and debounced events'); 
+        console.log('🎨 Brand Style Generator v2.0 - Loaded Successfully!');
+        console.log('💡 Tip: Press Ctrl/Cmd + G to quickly generate a new style');
+    </script>
+</body>
+</html>
